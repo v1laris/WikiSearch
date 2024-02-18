@@ -1,4 +1,4 @@
-#WikiSearch
+<h1>WikiSearch</h1>
 
 Service for searching on Wikipedia
 
