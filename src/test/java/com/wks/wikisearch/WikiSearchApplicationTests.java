@@ -1,4 +1,4 @@
-package com.wikisearch.WikiSearch;
+package com.wks.wikisearch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
