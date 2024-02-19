@@ -17,7 +17,6 @@ public class RequestsController {
     private final RequestsService requestsService;
     @GetMapping("/get")
     public Request get(@RequestParam String word) {
-        //return Request.builder().query("You have searched " + word).build();
         return requestsService.get(word);
     }
 }
