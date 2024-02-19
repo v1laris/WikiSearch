@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RequestsController {
     @GetMapping("/get")
     public Request get(@RequestParam String word){
-        // github конченый
         return Request.builder().query("You have searched " + word).build();
     }
 }
