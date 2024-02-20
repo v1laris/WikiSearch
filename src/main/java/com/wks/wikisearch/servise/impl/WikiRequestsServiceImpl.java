@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WikiRequestsServiceImpl implements RequestsService {
-
+// hui
     @Override
     public Request get(String word) {
         return Request.builder().query("You have searched " + word).build();
