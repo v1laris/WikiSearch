@@ -4,5 +4,5 @@ import com.wks.wikisearch.model.Request;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface RequestsService {
-    public Request get(@RequestParam String word);
+    public Request get(String word);
 }
