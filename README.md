@@ -2,7 +2,7 @@
 
 Service for searching on Wikipedia
 
-Created with Spring Boot
+Created with Spring Boot 3.2.2, Maven 4.0.0
 
 # WikiSearch Java Application
 
