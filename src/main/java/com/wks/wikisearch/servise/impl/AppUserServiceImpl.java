@@ -1,6 +1,7 @@
 package com.wks.wikisearch.servise.impl;
 
 import com.wks.wikisearch.model.AppUser;
+import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.AppUserRepository;
 import com.wks.wikisearch.servise.AppUserService;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import com.wks.wikisearch.repository.CountryRepository;
 
 @Service
 @AllArgsConstructor
@@ -16,9 +18,17 @@ import java.util.List;
 public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository repository;
+    private final CountryRepository countryRepository;
     @Override
     public List<AppUser> findAllUsers() {
         return repository.findAll();
+    }
+
+
+    public AppUser saveUserWithCountry(AppUser user, String countryName) {
+        Country country = countryRepository.findCountryByName(countryName);
+        user.setCountry(country);
+        return repository.save(user);
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.wks.wikisearch.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
+
+
+import java.util.*;
 
 @Data
 @Entity
@@ -11,6 +13,10 @@ public class Country {
     @Id
     @GeneratedValue
     private Long id;
-
+    @Column(unique = true)
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
+    private List<AppUser> countryUsers;// = new ArrayList<>();
 }
