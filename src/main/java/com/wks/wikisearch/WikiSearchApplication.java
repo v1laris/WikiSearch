@@ -7,5 +7,4 @@ public class WikiSearchApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WikiSearchApplication.class, args);
 	}
-
 }
