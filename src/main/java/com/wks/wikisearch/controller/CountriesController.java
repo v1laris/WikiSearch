@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/countries")
+@RequestMapping("/api/countries")
 @AllArgsConstructor
 public class CountriesController {
     private final CountryServiceImpl service;
     @GetMapping
-    public List<Country> findAllUsers() {
+    public List<Country> findAllCountries() {
 
         return service.findAllCountries();
     }
 
     @PostMapping("save_country")
-    public String saveStudent(@RequestBody Country country) {
+    public String saveCountry(@RequestBody Country country) {
         service.saveCountry(country);
         return "Country successfully saved";
     }

@@ -3,7 +3,6 @@ package com.wks.wikisearch.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.time.Period;

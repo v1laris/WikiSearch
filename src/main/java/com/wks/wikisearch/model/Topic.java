@@ -1,11 +1,18 @@
 package com.wks.wikisearch.model;
 
-import lombok.Builder;
+import jakarta.persistence.*;
+import java.util.*;
 import lombok.Data;
 
 @Data
-@Builder
+@Entity
 public class Topic {
-    private int topicId; // Уникальный идентификатор темы
-    private String name; // Название темы
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToMany(mappedBy = "topics")
+    private Set<Article> articles = new HashSet<>();
 }
