@@ -1,5 +1,6 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.servise.impl.ArticleService;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,11 @@ public class ArticleController {
     @GetMapping("/{title}")
     public Article findByTitle(@PathVariable String title) {
         return service.findByTitle(title);
+    }
+
+    @GetMapping("/with_topics")
+    public List<ArticleDTO> getAllArticlesWithTopics() {
+        return service.getAllArticlesWithTopics();
     }
 
     @PutMapping("update_article")

@@ -1,5 +1,6 @@
 package com.wks.wikisearch.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.*;
 import lombok.Data;
@@ -13,6 +14,6 @@ public class Topic {
 
     private String name;
 
-    @ManyToMany(mappedBy = "topics")
+    @ManyToMany(mappedBy = "topics", fetch = FetchType.LAZY)
     private Set<Article> articles = new HashSet<>();
 }

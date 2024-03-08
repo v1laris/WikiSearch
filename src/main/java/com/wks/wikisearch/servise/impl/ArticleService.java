@@ -1,12 +1,16 @@
 package com.wks.wikisearch.servise.impl;
 
+import com.wks.wikisearch.dto.ArticleDTO;
+import com.wks.wikisearch.dto.TopicDTO;
 import com.wks.wikisearch.model.Article;
+import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,12 +24,6 @@ public class ArticleService {
     public Article findByTitle(String title){
         return articleRepository.findByTitle(title);
     }
-
-/*    public Article getArticleById(Long articleId) {
-        return articleRepository.findById(ArticleId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Article with id " + ArticleId + "does not exist"));
-    }*/
 
     public void saveArticle(Article article) {
         boolean exists = articleRepository.existsByTitle(article.getTitle());
@@ -50,5 +48,25 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalStateException(
                         "Article with id " + article.getId() + "can not be updated, because it does not exist"));
 
+    }
+
+    private ArticleDTO convertToDTO(Article article) {
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setId(article.getId());
+        articleDTO.setTitle(article.getTitle());
+        articleDTO.setContent(article.getContent());
+        articleDTO.setTopics(article.getTopics().stream().map(this::convertToDTO).collect(Collectors.toList()));
+        return articleDTO;
+    }
+
+    private TopicDTO convertToDTO(Topic topic) {
+        TopicDTO topicDTO = new TopicDTO();
+        topicDTO.setId(topic.getId());
+        topicDTO.setName(topic.getName());
+        return topicDTO;
+    }
+    public List<ArticleDTO> getAllArticlesWithTopics() {
+        List<Article> articles = articleRepository.findAll();
+        return articles.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 }
