@@ -46,6 +46,9 @@ public class ArticleService {
     }
 
     public void addNewTopicByArticleTitle(String articleTitle, String topicName) {
+        if(!articleRepository.existsByTitle(articleTitle) || !topicRepository.existsByName(topicName)){
+            return;
+        }
         articleCustomRepository.addTopicToArticle(articleCustomRepository.findArticleByTitle(articleTitle).getId(),
                 topicCustomRepository.findTopicByName(topicName).getId());
     }

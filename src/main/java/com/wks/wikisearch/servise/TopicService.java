@@ -2,6 +2,7 @@ package com.wks.wikisearch.servise;
 
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
+import com.wks.wikisearch.repository.ArticleRepository;
 import com.wks.wikisearch.repository.TopicCustomRepository;
 import com.wks.wikisearch.repository.TopicRepository;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.*;
 public class TopicService {
     private final TopicRepository topicRepository;
     private final TopicCustomRepository topicCustomRepository;
+    private final ArticleRepository articleRepository;
     private final ArticleCustomRepository articleCustomRepository;
 
     public List<Topic> findAllTopics() {
@@ -32,6 +34,9 @@ public class TopicService {
     }
 
     public void addNewArticleByTopicName(String topicName, String articleTitle) {
+        if(!articleRepository.existsByTitle(articleTitle) || !topicRepository.existsByName(topicName)){
+            return;
+        }
         topicCustomRepository.addArticleToTopic(topicCustomRepository.findTopicByName(topicName).getId(),
                 articleCustomRepository.findArticleByTitle(articleTitle).getId());
     }
