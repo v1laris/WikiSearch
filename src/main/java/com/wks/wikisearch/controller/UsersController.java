@@ -31,8 +31,8 @@ public class UsersController {
     }
 
     @PutMapping("update_user")
-    public String updateUser(@RequestBody AppUser student) {
-        return service.updateUser(student);
+    public String updateUser(@RequestBody AppUser user) {
+        return service.updateUser(user);
     }
 
     @DeleteMapping("delete_user/{email}")

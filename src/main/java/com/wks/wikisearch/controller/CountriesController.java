@@ -29,11 +29,6 @@ public class CountriesController {
         return service.findByName(name);
     }
 
-    @PutMapping("update_country")
-    public String updateCountry(@RequestBody Country country) {
-        return service.updateCountry(country);
-    }
-
     @DeleteMapping("delete_country/{name}")
     public void deleteCountry(@PathVariable String name) {
         service.deleteCountry(name);

@@ -15,7 +15,6 @@ public class ArticleController {
 
     @GetMapping
     public List<Article> findAllArticles() {
-
         return service.findAllArticles();
     }
 

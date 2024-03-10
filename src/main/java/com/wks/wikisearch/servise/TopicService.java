@@ -2,7 +2,6 @@ package com.wks.wikisearch.servise;
 
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
-import com.wks.wikisearch.repository.ArticleRepository;
 import com.wks.wikisearch.repository.TopicCustomRepository;
 import com.wks.wikisearch.repository.TopicRepository;
 import lombok.AllArgsConstructor;
@@ -14,12 +13,11 @@ import java.util.*;
 @AllArgsConstructor
 public class TopicService {
     private final TopicRepository topicRepository;
-    private final ArticleRepository articleRepository;
     private final TopicCustomRepository topicCustomRepository;
     private final ArticleCustomRepository articleCustomRepository;
 
     public List<Topic> findAllTopics() {
-        return topicRepository.findAll();
+        return topicCustomRepository.findAllTopicsWithArticles();
     }
 
     public Topic findByTitle(String name){
@@ -31,10 +29,6 @@ public class TopicService {
             throw new IllegalStateException("Topic exists.");
         }
         topicRepository.save(topic);
-    }
-
-    public void updateTopic(Topic topic) {
-        topicCustomRepository.updateTopic(topic);
     }
 
     public void addNewArticleByTopicName(String topicName, String articleTitle) {

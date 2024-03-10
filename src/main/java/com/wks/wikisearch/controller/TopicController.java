@@ -29,11 +29,6 @@ public class TopicController {
         return service.findByTitle(title);
     }
 
-    @PutMapping("update_topic")
-    public void updateCountry(@RequestBody Topic topic) {
-        service.updateTopic(topic);
-    }
-
     @DeleteMapping("delete_topic/{name}")
     public void deleteTopic(@PathVariable String name) {
         service.deleteTopic(name);
@@ -43,7 +38,6 @@ public class TopicController {
     public void addNewArticleByTopicName(@PathVariable String topicName, @RequestParam String articleTitle) {
         service.addNewArticleByTopicName(topicName, articleTitle);
     }
-
     @DeleteMapping("/{topicName}/articles/detach")
     public void detachArticleFromTopicByName(@PathVariable String topicName, @RequestParam String articleTitle){
         service.detachArticleByTopicName(topicName, articleTitle);

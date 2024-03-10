@@ -30,8 +30,6 @@ public class AppUser {
     @Transient
     private int age;
 
-
-
     public AppUser() {
         // no args constructor
     }

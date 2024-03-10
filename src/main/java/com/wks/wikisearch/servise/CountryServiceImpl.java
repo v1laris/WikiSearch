@@ -23,10 +23,6 @@ public class CountryServiceImpl {
     public Country findByName(String name) {
         return repository.findCountryByName(name);
     }
-    public String updateCountry(Country country) {
-        repository.save(country);
-        return "Country updated.";
-    }
 
     @Transactional
     public void deleteCountry(String name) {
