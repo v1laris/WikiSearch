@@ -1,8 +1,6 @@
-package com.wks.wikisearch.servise.impl;
+package com.wks.wikisearch.servise;
 
-import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.repository.AppUserRepository;
 import com.wks.wikisearch.repository.CountryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

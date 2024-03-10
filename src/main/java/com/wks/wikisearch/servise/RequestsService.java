@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise.impl;
+package com.wks.wikisearch.servise;
 
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,7 +31,6 @@ public class RequestsService {
             }
             return resultArray.toString();
         } catch (Exception e) {
-            e.printStackTrace();
             return "Error occurred";
         }
     }

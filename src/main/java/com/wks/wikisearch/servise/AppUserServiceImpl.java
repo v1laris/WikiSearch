@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise.impl;
+package com.wks.wikisearch.servise;
 
 import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.model.Country;

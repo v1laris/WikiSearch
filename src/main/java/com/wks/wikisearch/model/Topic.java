@@ -1,12 +1,14 @@
 package com.wks.wikisearch.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "topic")
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +16,16 @@ public class Topic {
 
     private String name;
 
-    @ManyToMany(mappedBy = "topics", fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "topics", fetch = FetchType.LAZY)
     private Set<Article> articles = new HashSet<>();
+
+    public Topic(Long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.articles = new HashSet<>();
+    }
+
+    public Topic() {
+
+    }
 }

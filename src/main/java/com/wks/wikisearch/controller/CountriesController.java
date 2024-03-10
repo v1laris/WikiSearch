@@ -1,7 +1,7 @@
 package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.servise.impl.CountryServiceImpl;
+import com.wks.wikisearch.servise.CountryServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

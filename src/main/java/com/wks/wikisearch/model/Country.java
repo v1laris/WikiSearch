@@ -16,7 +16,7 @@ public class Country {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<AppUser> countryUsers;// = new ArrayList<>();
 }

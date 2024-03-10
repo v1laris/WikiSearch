@@ -1,8 +1,7 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.dto.TopicDTO;
 import com.wks.wikisearch.model.Topic;
-import com.wks.wikisearch.servise.impl.TopicService;
+import com.wks.wikisearch.servise.TopicService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,13 +39,13 @@ public class TopicController {
         service.deleteTopic(name);
     }
 
-    @PostMapping("/{articleTitle}/topics/add_new")
-    public void addNewTopicByArticleName(@PathVariable String articleTitle, @RequestParam String topicName) {
-        service.addNewTopicByArticleName(articleTitle, topicName);
+    @PostMapping("/{topicName}/articles/add_new")
+    public void addNewArticleByTopicName(@PathVariable String topicName, @RequestParam String articleTitle) {
+        service.addNewArticleByTopicName(topicName, articleTitle);
     }
 
-    @GetMapping("/withArticles")
-    public List<TopicDTO> getAllTopicsWithArticles() {
-        return service.getAllTopicsWithArticles();
+    @DeleteMapping("/{topicName}/articles/detach")
+    public void detachArticleFromTopicByName(@PathVariable String topicName, @RequestParam String articleTitle){
+        service.detachArticleByTopicName(topicName, articleTitle);
     }
 }
