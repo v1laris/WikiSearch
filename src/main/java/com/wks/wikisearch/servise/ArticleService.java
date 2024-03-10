@@ -42,10 +42,7 @@ public class ArticleService {
     }
 
     public void updateArticle(Article article) {
-        Article Article = articleRepository.findById(article.getId())
-                .orElseThrow(() -> new IllegalStateException(
-                        "Article with id " + article.getId() + "can not be updated, because it does not exist"));
-
+        articleCustomRepository.updateArticle(article);
     }
 
     public void addNewTopicByArticleTitle(String articleTitle, String topicName) {

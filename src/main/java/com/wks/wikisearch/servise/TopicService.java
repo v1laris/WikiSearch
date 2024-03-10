@@ -26,18 +26,15 @@ public class TopicService {
         return topicCustomRepository.findTopicByName(name);
     }
 
-    public void saveTopic(Topic Topic) {
-        if(topicRepository.existsByName(Topic.getName())) {
+    public void saveTopic(Topic topic) {
+        if(topicRepository.existsByName(topic.getName())) {
             throw new IllegalStateException("Topic exists.");
         }
-        topicRepository.save(Topic);
+        topicRepository.save(topic);
     }
 
-    public void updateTopic(Topic Topic) {
-        Topic topic = topicRepository.findById(Topic.getId())
-                .orElseThrow(() -> new IllegalStateException(
-                        "Topic with id " + Topic.getId() + "can not be updated, because it does not exist"));
-
+    public void updateTopic(Topic topic) {
+        topicCustomRepository.updateTopic(topic);
     }
 
     public void addNewArticleByTopicName(String topicName, String articleTitle) {

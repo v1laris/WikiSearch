@@ -2,8 +2,6 @@ package com.wks.wikisearch.model;
 
 import jakarta.persistence.*;
 import java.util.*;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

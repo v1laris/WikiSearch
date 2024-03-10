@@ -101,4 +101,9 @@ public class TopicCustomRepository {
         String sql = "DELETE FROM article_topic WHERE topic_id = ? AND article_id = ?";
         jdbcTemplate.update(sql, topicId, articleId);
     }
+
+    public void updateTopic(Topic topic) {
+        String sql = "UPDATE topic SET name = ? WHERE id = ?";
+        jdbcTemplate.update(sql, topic.getName(), topic.getId());
+    }
 }

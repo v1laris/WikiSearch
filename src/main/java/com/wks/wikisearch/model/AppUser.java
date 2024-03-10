@@ -31,7 +31,9 @@ public class AppUser {
     private int age;
 
 
+
     public AppUser() {
+        // no args constructor
     }
 
     public int getAge(){

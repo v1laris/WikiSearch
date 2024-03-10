@@ -9,16 +9,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 @Service
 @AllArgsConstructor
 public class RequestsService {
-    private final String WIKIPEDIA_API_URL = "https://ru.wikipedia.org/w/api.php";
+    private static final String wikipediaApiUrl = "https://ru.wikipedia.org/w/api.php";
 
     public String search(String query) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = WIKIPEDIA_API_URL + "?action=query&list=search&srsearch=" + query + "&format=json";
+        String url = wikipediaApiUrl + "?action=query&list=search&srsearch=" + query + "&format=json";
 
         String response = restTemplate.getForObject(url, String.class);
 
-        // Парсим JSON-ответ
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode root = mapper.readTree(response);
