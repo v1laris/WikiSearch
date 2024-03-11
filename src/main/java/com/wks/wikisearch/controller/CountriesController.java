@@ -1,7 +1,7 @@
 package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.servise.CountryServiceImpl;
+import com.wks.wikisearch.service.CountryServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +32,10 @@ public class CountriesController {
     @DeleteMapping("delete_country/{name}")
     public void deleteCountry(@PathVariable String name) {
         service.deleteCountry(name);
+    }
+
+    @PutMapping("update_country")
+    public String updateCountry(@RequestBody Country country) {
+        return service.updateCountry(country);
     }
 }

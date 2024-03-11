@@ -1,8 +1,9 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.CountryRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,8 @@ public class CountryServiceImpl {
         return repository.findAll();
     }
 
-    public String saveCountry(Country country) {
+    public void saveCountry(Country country) {
         repository.save(country);
-        return "Country saved.";
     }
     public Country findByName(String name) {
         return repository.findCountryByName(name);
@@ -29,4 +29,13 @@ public class CountryServiceImpl {
         repository.deleteByName(name);
     }
 
+    public String updateCountry(Country country) {
+        if(repository.existsById(country.getId())) {
+            String sql = "UPDATE country SET name = ? WHERE id = ?";
+            jdbcTemplate.update(sql, country.getName(), country.getId());
+            return "Country updated.";
+        }
+        return "Country is not updated.";
+    }
+    private final JdbcTemplate jdbcTemplate;
 }

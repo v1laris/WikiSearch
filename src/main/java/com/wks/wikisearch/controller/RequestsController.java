@@ -1,6 +1,6 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.servise.RequestsService;
+import com.wks.wikisearch.service.RequestsService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

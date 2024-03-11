@@ -16,7 +16,7 @@ public class Country {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<AppUser> countryUsers;
 }

@@ -1,7 +1,7 @@
 package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.model.Topic;
-import com.wks.wikisearch.servise.TopicService;
+import com.wks.wikisearch.service.TopicService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +41,10 @@ public class TopicController {
     @DeleteMapping("/{topicName}/articles/detach")
     public void detachArticleFromTopicByName(@PathVariable String topicName, @RequestParam String articleTitle){
         service.detachArticleByTopicName(topicName, articleTitle);
+    }
+
+    @PutMapping("update_topic")
+    public void updateCountry(@RequestBody Topic topic) {
+        service.updateTopic(topic);
     }
 }

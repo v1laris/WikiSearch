@@ -1,7 +1,7 @@
 package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.model.AppUser;
-import com.wks.wikisearch.servise.AppUserServiceImpl;
+import com.wks.wikisearch.service.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

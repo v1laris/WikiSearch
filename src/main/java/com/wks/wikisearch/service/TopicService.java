@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
@@ -51,4 +51,7 @@ public class TopicService {
                 articleCustomRepository.findArticleByTitle(articleTitle).getId());
     }
 
+    public void updateTopic(Topic topic) {
+        topicCustomRepository.updateTopic(topic);
+    }
 }

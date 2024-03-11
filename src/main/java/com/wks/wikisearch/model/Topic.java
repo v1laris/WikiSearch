@@ -14,7 +14,7 @@ public class Topic {
 
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "topics", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "topics", fetch = FetchType.LAZY)
     private Set<Article> articles = new HashSet<>();
 
     public Topic(Long id, String name) {

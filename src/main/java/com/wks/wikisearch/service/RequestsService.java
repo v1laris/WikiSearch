@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;

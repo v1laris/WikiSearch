@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.repository.ArticleCustomRepository;

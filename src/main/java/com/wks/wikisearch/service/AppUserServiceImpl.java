@@ -1,9 +1,9 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.model.Country;
+import com.wks.wikisearch.repository.AppUserCustomRepository;
 import com.wks.wikisearch.repository.AppUserRepository;
-import com.wks.wikisearch.servise.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository repository;
     private final CountryRepository countryRepository;
+    private final AppUserCustomRepository appUserCustomRepository;
     @Override
     public List<AppUser> findAllUsers() {
         return repository.findAll();
@@ -44,7 +45,10 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String updateUser(AppUser user) {
-        repository.save(user);
+        AppUser updatedUser = findByEmail(user.getEmail());
+        if(updatedUser != null){
+            appUserCustomRepository.updateUser(user);
+        }
         return "User updated.";
     }
 

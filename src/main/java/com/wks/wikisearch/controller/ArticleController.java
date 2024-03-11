@@ -1,7 +1,7 @@
 package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.model.Article;
-import com.wks.wikisearch.servise.ArticleService;
+import com.wks.wikisearch.service.ArticleService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

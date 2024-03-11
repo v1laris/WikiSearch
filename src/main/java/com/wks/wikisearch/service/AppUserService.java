@@ -1,4 +1,4 @@
-package com.wks.wikisearch.servise;
+package com.wks.wikisearch.service;
 
 import java.util.List;
 import com.wks.wikisearch.model.AppUser;
