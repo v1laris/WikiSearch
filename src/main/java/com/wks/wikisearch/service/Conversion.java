@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Conversion {
 
-    public Conversion(){
+    private Conversion(){
 
     }
 
