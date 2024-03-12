@@ -1,6 +1,5 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.dto.TopicDTO;
 import com.wks.wikisearch.dto.TopicDTOWithArticles;
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.service.TopicService;

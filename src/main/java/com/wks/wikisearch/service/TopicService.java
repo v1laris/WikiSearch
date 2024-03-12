@@ -1,9 +1,6 @@
 package com.wks.wikisearch.service;
 
-import com.wks.wikisearch.dto.ArticleDTO;
-import com.wks.wikisearch.dto.TopicDTO;
 import com.wks.wikisearch.dto.TopicDTOWithArticles;
-import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
 import com.wks.wikisearch.repository.ArticleRepository;
@@ -28,14 +25,14 @@ public class TopicService {
         List<Topic> topics = topicCustomRepository.findAllTopicsWithArticles();
         List<TopicDTOWithArticles> topicDTOs = new ArrayList<>();
         for(Topic topic : topics) {
-            TopicDTOWithArticles topicDTO = Convertation.convertTopicToDTOWithArticles(topic);
+            TopicDTOWithArticles topicDTO = Conversion.convertTopicToDTOWithArticles(topic);
             topicDTOs.add(topicDTO);
         }
         return topicDTOs;
     }
 
     public TopicDTOWithArticles findByTitle(String name){
-        return Convertation.convertTopicToDTOWithArticles(topicCustomRepository.findTopicByName(name));
+        return Conversion.convertTopicToDTOWithArticles(topicCustomRepository.findTopicByName(name));
     }
 
     public void saveTopic(Topic topic) {

@@ -1,9 +1,7 @@
 package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.dto.CountryDTOWithUsers;
-import com.wks.wikisearch.dto.TopicDTOWithArticles;
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.CountryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +20,7 @@ public class CountryServiceImpl {
         List<Country> countries = repository.findAll();
         List<CountryDTOWithUsers> countryDTOs = new ArrayList<>();
         for(Country country : countries){
-            CountryDTOWithUsers countryDTO = Convertation.convertCountryToDTOWithUsers(country);
+            CountryDTOWithUsers countryDTO = Conversion.convertCountryToDTOWithUsers(country);
             countryDTOs.add(countryDTO);
         }
 
@@ -33,7 +31,7 @@ public class CountryServiceImpl {
         repository.save(country);
     }
     public CountryDTOWithUsers findByName(String name) {
-        return Convertation.convertCountryToDTOWithUsers(repository.findCountryByName(name));
+        return Conversion.convertCountryToDTOWithUsers(repository.findCountryByName(name));
     }
 
     public void deleteCountry(String name) {

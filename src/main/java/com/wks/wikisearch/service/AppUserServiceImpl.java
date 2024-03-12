@@ -1,15 +1,11 @@
 package com.wks.wikisearch.service;
 
-import com.wks.wikisearch.dto.AppUserDTO;
 import com.wks.wikisearch.dto.AppUserDTOWithCountry;
-import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.model.AppUser;
-import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.AppUserCustomRepository;
 import com.wks.wikisearch.repository.AppUserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +26,7 @@ public class AppUserServiceImpl implements AppUserService {
         List<AppUser> users = repository.findAll();
         List<AppUserDTOWithCountry> appUserDTOs = new ArrayList<>();
         for (AppUser user : users) {
-            AppUserDTOWithCountry appUserDTO = Convertation.convertAppUserWithCountry(user);
+            AppUserDTOWithCountry appUserDTO = Conversion.convertAppUserWithCountry(user);
             appUserDTOs.add(appUserDTO);
         }
         return appUserDTOs;
@@ -50,7 +46,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUserDTOWithCountry findByEmail(String email) {
-        return Convertation.convertAppUserWithCountry(repository.findAppUserByEmail(email));
+        return Conversion.convertAppUserWithCountry(repository.findAppUserByEmail(email));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.dto.AppUserDTO;
 import com.wks.wikisearch.dto.AppUserDTOWithCountry;
 import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.service.AppUserServiceImpl;

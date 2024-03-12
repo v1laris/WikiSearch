@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-public class Convertation {
+
+public class Conversion {
+
+    public Conversion(){
+
+    }
+
     public static TopicDTO convertTopicToDTO(Topic topic) {
         TopicDTO topicDTO = new TopicDTO();
         topicDTO.setId(topic.getId());
