@@ -1,5 +1,7 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.AppUserDTO;
+import com.wks.wikisearch.dto.AppUserDTOWithCountry;
 import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.service.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,7 @@ import java.util.List;
 public class UsersController {
     private final AppUserServiceImpl service;
     @GetMapping
-    public List<AppUser> findAllUsers() {
+    public List<AppUserDTOWithCountry> findAllUsers() {
         return service.findAllUsers();
     }
 
@@ -26,7 +28,7 @@ public class UsersController {
     }
 
     @GetMapping("/{email}")
-    public AppUser findByEmail(@PathVariable String email) {
+    public AppUserDTOWithCountry findByEmail(@PathVariable String email) {
         return service.findByEmail(email);
     }
 

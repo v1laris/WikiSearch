@@ -1,5 +1,7 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.TopicDTO;
+import com.wks.wikisearch.dto.TopicDTOWithArticles;
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.service.TopicService;
 import lombok.AllArgsConstructor;
@@ -14,18 +16,17 @@ public class TopicController {
     private final TopicService service;
 
     @GetMapping
-    public List<Topic> findAllTopics() {
+    public List<TopicDTOWithArticles> findAllTopics() {
         return service.findAllTopics();
     }
 
     @PostMapping("save_topic")
-    public String saveTopic(@RequestBody Topic topic) {
+    public void saveTopic(@RequestBody Topic topic) {
         service.saveTopic(topic);
-        return "Topic successfully saved";
     }
 
     @GetMapping("/{title}")
-    public Topic findByTitle(@PathVariable String title) {
+    public TopicDTOWithArticles findByTitle(@PathVariable String title) {
         return service.findByTitle(title);
     }
 

@@ -4,8 +4,10 @@ import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.model.Article;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class AppUserCustomRepository {
     private final JdbcTemplate jdbcTemplate;
 

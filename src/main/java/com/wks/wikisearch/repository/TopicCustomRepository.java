@@ -4,10 +4,12 @@ import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Topic;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Repository
+@Transactional
 public class TopicCustomRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -75,6 +77,7 @@ public class TopicCustomRepository {
             Article article = new Article();
             article.setId(rs.getLong("id"));
             article.setTitle(rs.getString("title"));
+            article.setUrl(rs.getString("url"));
             articles.add(article);
             return null;
         });

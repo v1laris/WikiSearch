@@ -1,5 +1,7 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.ArticleDTO;
+import com.wks.wikisearch.dto.ArticleDTOWithTopics;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.service.ArticleService;
 import lombok.AllArgsConstructor;
@@ -14,18 +16,17 @@ public class ArticleController {
     private final ArticleService service;
 
     @GetMapping
-    public List<Article> findAllArticles() {
+    public List<ArticleDTOWithTopics> findAllArticles() {
         return service.findAllArticles();
     }
 
     @PostMapping("save_article")
-    public String saveArticle(@RequestBody Article article) {
+    public void saveArticle(@RequestBody Article article) {
         service.saveArticle(article);
-        return "Article successfully saved";
     }
 
     @GetMapping("/{title}")
-    public Article findByTitle(@PathVariable String title) {
+    public ArticleDTOWithTopics findByTitle(@PathVariable String title) {
         return service.findByTitle(title);
     }
 

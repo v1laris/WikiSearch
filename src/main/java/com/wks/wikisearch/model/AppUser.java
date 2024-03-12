@@ -12,7 +12,7 @@ import java.time.Period;
 @AllArgsConstructor
 public class AppUser {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String firstName;

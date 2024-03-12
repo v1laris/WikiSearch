@@ -1,6 +1,10 @@
 package com.wks.wikisearch.service;
 
+import com.wks.wikisearch.dto.AppUserDTO;
+import com.wks.wikisearch.dto.AppUserDTOWithCountry;
+import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.model.AppUser;
+import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.AppUserCustomRepository;
 import com.wks.wikisearch.repository.AppUserRepository;
@@ -9,20 +13,27 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.wks.wikisearch.repository.CountryRepository;
 
 @Service
 @AllArgsConstructor
-@Primary
+@Transactional
 public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository repository;
     private final CountryRepository countryRepository;
     private final AppUserCustomRepository appUserCustomRepository;
     @Override
-    public List<AppUser> findAllUsers() {
-        return repository.findAll();
+    public List<AppUserDTOWithCountry> findAllUsers() {
+        List<AppUser> users = repository.findAll();
+        List<AppUserDTOWithCountry> appUserDTOs = new ArrayList<>();
+        for (AppUser user : users) {
+            AppUserDTOWithCountry appUserDTO = Convertation.convertAppUserWithCountry(user);
+            appUserDTOs.add(appUserDTO);
+        }
+        return appUserDTOs;
     }
 
 
@@ -33,19 +44,18 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public String saveUser(AppUser user) {
+    public void saveUser(AppUser user) {
         repository.save(user);
-        return "User saved.";
     }
 
     @Override
-    public AppUser findByEmail(String email) {
-        return repository.findAppUserByEmail(email);
+    public AppUserDTOWithCountry findByEmail(String email) {
+        return Convertation.convertAppUserWithCountry(repository.findAppUserByEmail(email));
     }
 
     @Override
     public String updateUser(AppUser user) {
-        AppUser updatedUser = findByEmail(user.getEmail());
+        AppUserDTOWithCountry updatedUser = findByEmail(user.getEmail());
         if(updatedUser != null){
             appUserCustomRepository.updateUser(user);
         }
@@ -53,7 +63,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    @Transactional
     public void deleteUser(String email) {
         repository.deleteByEmail(email);
     }

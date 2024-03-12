@@ -1,5 +1,6 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.CountryDTOWithUsers;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.service.CountryServiceImpl;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 public class CountriesController {
     private final CountryServiceImpl service;
     @GetMapping
-    public List<Country> findAllCountries() {
+    public List<CountryDTOWithUsers> findAllCountries() {
 
         return service.findAllCountries();
     }
@@ -25,7 +26,7 @@ public class CountriesController {
     }
 
     @GetMapping("/{name}")
-    public Country findByName(@PathVariable String name) {
+    public CountryDTOWithUsers findByName(@PathVariable String name) {
         return service.findByName(name);
     }
 

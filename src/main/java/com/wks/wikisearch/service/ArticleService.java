@@ -1,6 +1,9 @@
 package com.wks.wikisearch.service;
 
+import com.wks.wikisearch.dto.ArticleDTOWithTopics;
+import com.wks.wikisearch.dto.TopicDTO;
 import com.wks.wikisearch.model.Article;
+import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
 import com.wks.wikisearch.repository.ArticleRepository;
 import com.wks.wikisearch.repository.TopicCustomRepository;
@@ -13,18 +16,25 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final TopicRepository topicRepository;
     private final ArticleCustomRepository articleCustomRepository;
     private final TopicCustomRepository topicCustomRepository;
 
-    public List<Article> findAllArticles(){
-        return articleCustomRepository.findAllArticlesWithTopics();
+    public List<ArticleDTOWithTopics> findAllArticles(){
+        List<Article> articles = articleCustomRepository.findAllArticlesWithTopics();
+        List<ArticleDTOWithTopics> articleDTOsWithTopics = new ArrayList<>();
+        for (Article article : articles) {
+            ArticleDTOWithTopics articleDTOWithTopics = Convertation.convertArticleToDTOWithTopics(article);
+            articleDTOsWithTopics.add(articleDTOWithTopics);
+        }
+        return articleDTOsWithTopics;
     }
 
-    public Article findByTitle(String title){
-        return articleCustomRepository.findArticleByTitle(title);
+    public ArticleDTOWithTopics findByTitle(String title){
+        return Convertation.convertArticleToDTOWithTopics(articleCustomRepository.findArticleByTitle(title));
     }
 
     public void saveArticle(Article article) {
