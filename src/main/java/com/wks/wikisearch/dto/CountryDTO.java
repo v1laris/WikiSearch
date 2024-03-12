@@ -1,6 +1,5 @@
 package com.wks.wikisearch.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data

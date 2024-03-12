@@ -1,10 +1,6 @@
 package com.wks.wikisearch.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.wks.wikisearch.model.Country;
-import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 

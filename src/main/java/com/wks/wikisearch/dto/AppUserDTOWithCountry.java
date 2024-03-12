@@ -1,7 +1,5 @@
 package com.wks.wikisearch.dto;
 
-import com.wks.wikisearch.model.Country;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.time.LocalDate;

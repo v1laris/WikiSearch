@@ -5,10 +5,14 @@ import com.wks.wikisearch.model.AppUser;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.model.Topic;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Convertation {
     public static TopicDTO convertTopicToDTO(Topic topic) {
         TopicDTO topicDTO = new TopicDTO();
