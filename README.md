@@ -1,10 +1,5 @@
-<h1>WikiSearch</h1>
-
-Service for searching on Wikipedia
-
-Created with Spring Boot 3.2.2, Maven 4.0.0
-
 # WikiSearch Java Application
+Spring Boot 3.2.2, Maven 4.0.0, PostgreSQL
 
 Простое приложение, которое получает запрос и выводит hard-coded результат. Разработано на Java с использованием Spring Boot Framework.
 
@@ -12,6 +7,13 @@ Created with Spring Boot 3.2.2, Maven 4.0.0
 
 1.  Создайте и запустите локально простейший веб/REST сервис, используя любой открытый пример с использованием Java stack: Spring (Spring Boot)/Maven/Gradle/Jersey/Spring MVC.
 2.  Добавьте GET ендпоинт, принимающий входные параметры в качестве queryParams в URL согласно варианту, и возвращающий любой hard-coded результат в виде JSON согласно варианту.
+
+## Задание 2
+
+1. Подключить в проект БД (PostgreSQL/MySQL/и т.д.).
+(0 - 7 баллов) - Реализация связи один ко многим @OneToMany
+(8 - 10 баллов) - Реализация связи многие ко многим @ManyToMany
+2. Реализовать CRUD-операции со всеми сущностями.
 
 ## Запуск
 
