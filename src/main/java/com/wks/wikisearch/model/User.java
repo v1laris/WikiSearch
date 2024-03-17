@@ -10,9 +10,10 @@ import java.time.Period;
 @Data
 @Entity
 @AllArgsConstructor
-public class AppUser {
+@Table(name = "users")
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String firstName;
@@ -30,12 +31,12 @@ public class AppUser {
     @Transient
     private int age;
 
-    public AppUser() {
+    public User() {
         // no args constructor
     }
 
     public int getAge(){
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
+
     }
-    public String getCountryName(){return country.getName();}
 }

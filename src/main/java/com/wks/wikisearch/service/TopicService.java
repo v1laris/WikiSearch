@@ -21,6 +21,10 @@ public class TopicService {
     private final ArticleRepository articleRepository;
     private final ArticleCustomRepository articleCustomRepository;
 
+
+    /*public Topic findById(){
+        topicRepository.findById();
+    }*/
     public List<TopicDTOWithArticles> findAllTopics() {
         List<Topic> topics = topicCustomRepository.findAllTopicsWithArticles();
         List<TopicDTOWithArticles> topicDTOs = new ArrayList<>();
@@ -31,15 +35,18 @@ public class TopicService {
         return topicDTOs;
     }
 
-    public TopicDTOWithArticles findByTitle(String name){
-        return Conversion.convertTopicToDTOWithArticles(topicCustomRepository.findTopicByName(name));
+    public TopicDTOWithArticles findByName(String name) {
+        if(topicRepository.existsByName(name)) {
+            return Conversion.convertTopicToDTOWithArticles(topicCustomRepository.findTopicByName(name));
+        }
+        return null;
     }
 
-    public void saveTopic(Topic topic) {
+    public Topic saveTopic(Topic topic) {
         if(topicRepository.existsByName(topic.getName())) {
             throw new IllegalStateException("Topic exists.");
         }
-        topicRepository.save(topic);
+        return topicRepository.save(topic);
     }
 
     public void addNewArticleByTopicName(String topicName, String articleTitle) {
@@ -51,8 +58,10 @@ public class TopicService {
     }
 
     public void deleteTopic(String name) {
-        Topic topic = topicCustomRepository.findTopicByName(name);
-        topicCustomRepository.deleteTopic(topic.getId());
+        if(topicRepository.existsByName(name)) {
+            Topic topic = topicCustomRepository.findTopicByName(name);
+            topicCustomRepository.deleteTopic(topic.getId());
+        }
     }
 
     public void detachArticleByTopicName(String topicName, String articleTitle){

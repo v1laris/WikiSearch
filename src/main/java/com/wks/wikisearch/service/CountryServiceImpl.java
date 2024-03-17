@@ -4,6 +4,7 @@ import com.wks.wikisearch.dto.CountryDTOWithUsers;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.CountryRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,13 @@ public class CountryServiceImpl {
         return  countryDTOs;
     }
 
-    public void saveCountry(Country country) {
-        repository.save(country);
+    public Country saveCountry(Country country) {
+        try {
+            return repository.save(country);
+        }
+        catch (DataIntegrityViolationException ex){
+            return null;
+        }
     }
     public CountryDTOWithUsers findByName(String name) {
         return Conversion.convertCountryToDTOWithUsers(repository.findCountryByName(name));
@@ -38,13 +44,9 @@ public class CountryServiceImpl {
         repository.deleteByName(name);
     }
 
-    public String updateCountry(Country country) {
-        if(repository.existsById(country.getId())) {
-            String sql = "UPDATE country SET name = ? WHERE id = ?";
-            jdbcTemplate.update(sql, country.getName(), country.getId());
-            return "Country updated.";
-        }
-        return "Country is not updated.";
+    public void updateCountry(Country country) {
+        Country temp = repository.findCountryByName(country.getName());
+        temp.setName(country.getName());
+        repository.save(temp);
     }
-    private final JdbcTemplate jdbcTemplate;
 }

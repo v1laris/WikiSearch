@@ -32,21 +32,26 @@ public class ArticleService {
     }
 
     public ArticleDTOWithTopics findByTitle(String title){
-        return Conversion.convertArticleToDTOWithTopics(articleCustomRepository.findArticleByTitle(title));
+        if(articleRepository.existsByTitle(title)) {
+            return Conversion.convertArticleToDTOWithTopics(articleCustomRepository.findArticleByTitle(title));
+        }
+        return null;
     }
 
-    public void saveArticle(Article article) {
+    public Article saveArticle(Article article) {
         boolean exists = articleRepository.existsByTitle(article.getTitle());
         if(exists) {
             throw new IllegalStateException("Article exists.");
         }
-        articleRepository.save(article);
+        return articleRepository.save(article);
     }
 
     @Transactional
     public void deleteArticle(String title) {
-        Article article = articleCustomRepository.findArticleByTitle(title);
-        articleCustomRepository.deleteArticle(article.getId());
+        if(articleRepository.existsByTitle(title)) {
+            Article article = articleCustomRepository.findArticleByTitle(title);
+            articleCustomRepository.deleteArticle(article.getId());
+        }
     }
 
     public void updateArticle(Article article) {

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface CountryRepository extends JpaRepository<Country, Long> {
     void deleteByName(String name);
     Country findCountryByName(String name);
+
 }

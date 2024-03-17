@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AppUserDTOWithCountry {
+public class UserDTOWithCountry {
     private Long id;
 
     private String firstName;

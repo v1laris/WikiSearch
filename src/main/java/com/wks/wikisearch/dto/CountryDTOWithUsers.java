@@ -8,5 +8,5 @@ import java.util.List;
 public class CountryDTOWithUsers {
     private Long id;
     private String name;
-    List<AppUserDTO> users;
+    List<UserDTO> users;
 }

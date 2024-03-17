@@ -1,7 +1,9 @@
 package com.wks.wikisearch.model;
 
 import jakarta.persistence.*;
+
 import java.util.*;
+
 import lombok.Data;
 
 @Data
@@ -16,17 +18,8 @@ public class Article {
     private String url;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "article_topic",
-            joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    @JoinTable(name = "article_topic", joinColumns = @JoinColumn(name = "article_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
     private Set<Topic> topics = new HashSet<>();
-
-    public Article(Long id, String title, String url) {
-        this.id = id;
-        this.title = title;
-        this.url = url;
-        this.topics = new HashSet<>();
-    }
 
     public Article() {
 

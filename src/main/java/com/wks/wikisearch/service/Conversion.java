@@ -1,12 +1,10 @@
 package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.dto.*;
-import com.wks.wikisearch.model.AppUser;
+import com.wks.wikisearch.model.User;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.model.Topic;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +28,14 @@ public class Conversion {
         topicDTO.setId(topic.getId());
         topicDTO.setName(topic.getName());
 
-        List<Article> articles = topic.getArticles().stream().toList();
-        List<ArticleDTO> articleDTOs = new ArrayList<>();
-        for(Article article : articles) {
-            articleDTOs.add(convertArticleToDTO(article));
+        if(topic.getArticles() != null) {
+            List<Article> articles = topic.getArticles().stream().toList();
+            List<ArticleDTO> articleDTOs = new ArrayList<>();
+            for (Article article : articles) {
+                articleDTOs.add(convertArticleToDTO(article));
+            }
+            topicDTO.setArticles(articleDTOs);
         }
-        topicDTO.setArticles(articleDTOs);
         return topicDTO;
     }
 
@@ -53,13 +53,14 @@ public class Conversion {
         articleDTOWithTopics.setTitle(article.getTitle());
         articleDTOWithTopics.setUrl(article.getUrl());
 
-        List<Topic> topics = article.getTopics().stream().toList();
-        List<TopicDTO> topicDTOs = new ArrayList<>();
-        for(Topic topic : topics) {
-            topicDTOs.add(convertTopicToDTO(topic));
+        if(article.getTopics() != null) {
+            List<Topic> topics = article.getTopics().stream().toList();
+            List<TopicDTO> topicDTOs = new ArrayList<>();
+            for (Topic topic : topics) {
+                topicDTOs.add(convertTopicToDTO(topic));
+            }
+            articleDTOWithTopics.setTopics(topicDTOs);
         }
-        articleDTOWithTopics.setTopics(topicDTOs);
-
         return articleDTOWithTopics;
     }
 
@@ -77,19 +78,20 @@ public class Conversion {
 
         countryDTOWithUsers.setId(country.getId());
         countryDTOWithUsers.setName(country.getName());
-
-        List<AppUser> users = country.getCountryUsers().stream().toList();
-        List<AppUserDTO> userDTOs = new ArrayList<>();
-        for(AppUser user : users) {
-            userDTOs.add(convertAppUserToDTO(user));
+        if(country.getCountryUsers() != null) {
+            List<User> users = country.getCountryUsers().stream().toList();
+            List<UserDTO> userDTOs = new ArrayList<>();
+            for (User user : users) {
+                userDTOs.add(convertAppUserToDTO(user));
+            }
+            countryDTOWithUsers.setUsers(userDTOs);
         }
-        countryDTOWithUsers.setUsers(userDTOs);
 
         return countryDTOWithUsers;
     }
 
-    public static AppUserDTO convertAppUserToDTO(AppUser appUser) {
-        AppUserDTO appUserDTO = new AppUserDTO();
+    public static UserDTO convertAppUserToDTO(User appUser) {
+        UserDTO appUserDTO = new UserDTO();
         appUserDTO.setId(appUser.getId());
         appUserDTO.setFirstName(appUser.getFirstName());
         appUserDTO.setLastName(appUser.getLastName());
@@ -99,8 +101,8 @@ public class Conversion {
         return appUserDTO;
     }
 
-    public static AppUserDTOWithCountry convertAppUserWithCountry(AppUser appUser) {
-        AppUserDTOWithCountry appUserDTOWithCountry = new AppUserDTOWithCountry();
+    public static UserDTOWithCountry convertAppUserWithCountry(User appUser) {
+        UserDTOWithCountry appUserDTOWithCountry = new UserDTOWithCountry();
 
         appUserDTOWithCountry.setId(appUser.getId());
         appUserDTOWithCountry.setFirstName(appUser.getFirstName());

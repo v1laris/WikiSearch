@@ -1,5 +1,6 @@
 package com.wks.wikisearch.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,5 +19,5 @@ public class Country {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    private List<AppUser> countryUsers;
+    private List<User> countryUsers;
 }
