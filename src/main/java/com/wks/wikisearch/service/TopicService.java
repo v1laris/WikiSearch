@@ -27,9 +27,6 @@ public class TopicService {
     private static final String ARTICLE_PRIMARY_KEY = "articles";
     private static final String TOPIC_PRIMARY_KEY = "topics";
 
-    /*public Topic findById(){
-        topicRepository.findById();
-    }*/
     public List<TopicDTOWithArticles> findAllTopics() {
         if (CacheManager.containsKey(TOPIC_PRIMARY_KEY)) {
             return (List<TopicDTOWithArticles>) CacheManager.get(TOPIC_PRIMARY_KEY);
@@ -54,9 +51,9 @@ public class TopicService {
             return (TopicDTOWithArticles) CacheManager.get(cacheKey);
         } else {
             if(CacheManager.containsKey(TOPIC_PRIMARY_KEY)) {
-                List<TopicDTOWithArticles> topics = (List<TopicDTOWithArticles>) CacheManager.get("/api/topics");
+                List<TopicDTOWithArticles> topics = (List<TopicDTOWithArticles>) CacheManager.get(TOPIC_PRIMARY_KEY);
                 Optional<TopicDTOWithArticles> findResult = topics.stream()
-                        .filter(TopicDTOWithArticles -> TopicDTOWithArticles
+                        .filter(topicDTOWithArticles -> topicDTOWithArticles
                                 .getName().equals(name)).findFirst();
                 if(findResult.isPresent()){
                     CacheManager.put(cacheKey, findResult.get());

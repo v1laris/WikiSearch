@@ -1,19 +1,12 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.cache.CacheManager;
-import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.dto.ArticleDTOWithTopics;
-import com.wks.wikisearch.dto.TopicDTO;
-import com.wks.wikisearch.dto.TopicDTOWithArticles;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.service.ArticleService;
-import com.wks.wikisearch.service.Conversion;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/articles")

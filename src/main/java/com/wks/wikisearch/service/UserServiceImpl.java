@@ -89,7 +89,7 @@ public class UserServiceImpl {
             if(CacheManager.containsKey(USER_PRIMARY_KEY)){
                 List<UserDTOWithCountry> users = (List<UserDTOWithCountry>)CacheManager.get(USER_PRIMARY_KEY);
                 Optional<UserDTOWithCountry> findResult = users.stream()
-                        .filter(UserDTOWithCountry -> UserDTOWithCountry
+                        .filter(userDTOWithCountry -> userDTOWithCountry
                                 .getEmail().equals(email)).findFirst();
                 if(findResult.isPresent()) {
                     CacheManager.put(cacheKey, findResult.get());
@@ -125,7 +125,7 @@ public class UserServiceImpl {
 
             if (CacheManager.containsKey(USER_PRIMARY_KEY)) {
                 List<UserDTOWithCountry> users = (List<UserDTOWithCountry>) CacheManager.get(USER_PRIMARY_KEY);
-                users.removeIf(UserDTOWithCountry -> UserDTOWithCountry.getEmail().equals(user.getEmail()));
+                users.removeIf(userDTOWithCountry -> userDTOWithCountry.getEmail().equals(user.getEmail()));
                 users.add(Conversion.convertAppUserWithCountry(userToUpdate));
                 CacheManager.put(USER_PRIMARY_KEY, users);
             }
@@ -140,7 +140,7 @@ public class UserServiceImpl {
         CacheManager.remove(cacheKey);
         if(CacheManager.containsKey(USER_PRIMARY_KEY)){
             List<UserDTOWithCountry> users = (List<UserDTOWithCountry>)CacheManager.get(USER_PRIMARY_KEY);
-            users.removeIf(UserDTOWithCountry -> UserDTOWithCountry.getEmail().equals(email));
+            users.removeIf(userDTOWithCountry -> userDTOWithCountry.getEmail().equals(email));
             CacheManager.put(USER_PRIMARY_KEY, users);
         }
         CacheManager.remove(COUNTRY_PRIMARY_KEY);

@@ -53,7 +53,7 @@ public class ArticleService {
             if(CacheManager.containsKey(ARTICLE_PRIMARY_KEY)) {
                 List<ArticleDTOWithTopics> articles = (List<ArticleDTOWithTopics>) CacheManager.get(ARTICLE_PRIMARY_KEY);
                 Optional<ArticleDTOWithTopics> findResult = articles.stream()
-                        .filter(ArticleDTOWithTopics -> ArticleDTOWithTopics
+                        .filter(articleDTOWithTopics -> articleDTOWithTopics
                                 .getTitle().equals(title)).findFirst();
                 if(findResult.isPresent()){
                     CacheManager.put(cacheKey, findResult.get());
@@ -88,7 +88,7 @@ public class ArticleService {
         CacheManager.remove(cacheKey);
         if(CacheManager.containsKey(ARTICLE_PRIMARY_KEY)) {
             List<ArticleDTOWithTopics> topics = (List<ArticleDTOWithTopics>) CacheManager.get(ARTICLE_PRIMARY_KEY);
-            topics.removeIf(ArticleDTOWithTopics -> ArticleDTOWithTopics.getTitle().equals(title));
+            topics.removeIf(articleDTOWithTopics -> articleDTOWithTopics.getTitle().equals(title));
             CacheManager.put(ARTICLE_PRIMARY_KEY, topics);
         }
         CacheManager.remove(TOPIC_PRIMARY_KEY);

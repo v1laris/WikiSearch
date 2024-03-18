@@ -53,7 +53,7 @@ public class CountryServiceImpl {
             }
         }
         catch (DataIntegrityViolationException ex){
-            return;
+
         }
     }
 
@@ -87,7 +87,7 @@ public class CountryServiceImpl {
         CacheManager.remove(cacheKey);
         if(CacheManager.containsKey(COUNTRY_PRIMARY_KEY)) {
             List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>)CacheManager.get(COUNTRY_PRIMARY_KEY);
-            countries.removeIf(CountryDTOWithUsers -> CountryDTOWithUsers.getName().equals(name));
+            countries.removeIf(countryDTOWithUsers -> countryDTOWithUsers.getName().equals(name));
             CacheManager.put(COUNTRY_PRIMARY_KEY, countries);
         }
         CacheManager.remove(COUNTRY_PRIMARY_KEY);
@@ -101,11 +101,11 @@ public class CountryServiceImpl {
         String cacheKey = COUNTRY_PRIMARY_KEY + "/" + countryOldName;
         if (CacheManager.containsKey(cacheKey)) {
             CacheManager.remove(cacheKey);
-            cacheKey = "/api/countries/" + country.getName();
+            cacheKey = COUNTRY_PRIMARY_KEY + "/" + country.getName();
             CacheManager.put(cacheKey, country);
         }
 
-        if (CacheManager.containsKey("/api/countries")) {
+        if (CacheManager.containsKey(COUNTRY_PRIMARY_KEY)) {
             List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>) CacheManager.get("/api/countries");
             Optional<CountryDTOWithUsers> findResult = countries.stream()
                     .filter(countryDTOWithUsers -> countryDTOWithUsers
@@ -116,12 +116,12 @@ public class CountryServiceImpl {
             temp.setUsers(countryUsers);
             countries.removeIf(CountryDTOWithUsers -> CountryDTOWithUsers.getName().equals(countryOldName));
             countries.add(temp);
-            CacheManager.put("/api/countries", countries);
+            CacheManager.put(COUNTRY_PRIMARY_KEY, countries);
         }
-        CacheManager.remove("/api/users");
+        CacheManager.remove(USER_PRIMARY_KEY);
 
         for (UserDTO countryUser : updateResult.getUsers()) {
-            String userKey = "/api/users/" + countryUser.getEmail();
+            String userKey = USER_PRIMARY_KEY + "/" + countryUser.getEmail();
             if (CacheManager.containsKey(userKey)) {
                 UserDTOWithCountry result = (UserDTOWithCountry) CacheManager.get(userKey);
                 result.setCountry(Conversion.convertCountryToDTO(country));

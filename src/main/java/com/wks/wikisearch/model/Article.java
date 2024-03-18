@@ -22,6 +22,6 @@ public class Article {
     private Set<Topic> topics = new HashSet<>();
 
     public Article() {
-
+        // no args constructor
     }
 }

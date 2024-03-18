@@ -3,15 +3,11 @@ package com.wks.wikisearch.controller;
 import com.wks.wikisearch.cache.CacheManager;
 import com.wks.wikisearch.dto.UserDTOWithCountry;
 import com.wks.wikisearch.model.User;
-import com.wks.wikisearch.service.Conversion;
 import com.wks.wikisearch.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")

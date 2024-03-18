@@ -1,17 +1,12 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.cache.CacheManager;
 import com.wks.wikisearch.dto.CountryDTOWithUsers;
-import com.wks.wikisearch.dto.UserDTO;
-import com.wks.wikisearch.dto.UserDTOWithCountry;
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.service.Conversion;
 import com.wks.wikisearch.service.CountryServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/countries")
