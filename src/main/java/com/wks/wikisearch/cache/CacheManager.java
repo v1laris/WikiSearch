@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@AllArgsConstructor
 public class CacheManager {
     private static final Map<String, Object> cache = new ConcurrentHashMap<>();
 
