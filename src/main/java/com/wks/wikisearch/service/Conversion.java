@@ -24,6 +24,9 @@ public class Conversion {
     }
 
     public static TopicDTOWithArticles convertTopicToDTOWithArticles(Topic topic) {
+        if(topic == null){
+            return null;
+        }
         TopicDTOWithArticles topicDTO = new TopicDTOWithArticles();
         topicDTO.setId(topic.getId());
         topicDTO.setName(topic.getName());
@@ -48,6 +51,9 @@ public class Conversion {
     }
 
     public static ArticleDTOWithTopics convertArticleToDTOWithTopics(Article article) {
+        if(article == null){
+            return null;
+        }
         ArticleDTOWithTopics articleDTOWithTopics = new ArticleDTOWithTopics();
         articleDTOWithTopics.setId(article.getId());
         articleDTOWithTopics.setTitle(article.getTitle());
@@ -74,6 +80,9 @@ public class Conversion {
     }
 
     public static CountryDTOWithUsers convertCountryToDTOWithUsers(Country country) {
+        if(country == null){
+            return null;
+        }
         CountryDTOWithUsers countryDTOWithUsers = new CountryDTOWithUsers();
 
         countryDTOWithUsers.setId(country.getId());

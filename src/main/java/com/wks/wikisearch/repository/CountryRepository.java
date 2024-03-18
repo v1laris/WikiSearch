@@ -9,4 +9,5 @@ public interface CountryRepository extends JpaRepository<Country, Long> {
     void deleteByName(String name);
     Country findCountryByName(String name);
 
+    boolean existsByName(String name);
 }

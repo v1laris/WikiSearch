@@ -1,4 +1,4 @@
-package com.wks.wikisearch.controller;
+package com.wks.wikisearch.cache;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
