@@ -23,4 +23,6 @@ public class CacheManager {
     public static boolean containsKey(String key) {
         return cache.containsKey(key);
     }
+
+    private CacheManager(){}
 }

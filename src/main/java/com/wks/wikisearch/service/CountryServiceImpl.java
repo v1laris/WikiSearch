@@ -8,6 +8,8 @@ import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.CountryCustomRepository;
 import com.wks.wikisearch.repository.CountryRepository;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class CountryServiceImpl {
     private final CountryRepository repository;
     private final CountryCustomRepository customRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CountryServiceImpl.class);
     private static final String COUNTRY_PRIMARY_KEY = "countries";
     private static final String USER_PRIMARY_KEY = "users";
     public List<CountryDTOWithUsers> findAllCountries() {
@@ -45,15 +48,19 @@ public class CountryServiceImpl {
 
     public void saveCountry(Country country) {
         try {
-            repository.save(country);
-            if(CacheManager.containsKey(COUNTRY_PRIMARY_KEY)) {
-                List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>)CacheManager.get(COUNTRY_PRIMARY_KEY);
-                countries.add(Conversion.convertCountryToDTOWithUsers(country));
-                CacheManager.put(COUNTRY_PRIMARY_KEY, countries);
+            if(!repository.existsByName(country.getName())) {
+                repository.save(country);
+                if (CacheManager.containsKey(COUNTRY_PRIMARY_KEY)) {
+                    List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>) CacheManager.get(COUNTRY_PRIMARY_KEY);
+                    countries.add(Conversion.convertCountryToDTOWithUsers(country));
+                    CacheManager.put(COUNTRY_PRIMARY_KEY, countries);
+                }
+            } else {
+                logger.info("This country already exists");
             }
         }
         catch (DataIntegrityViolationException ex){
-
+            logger.info("This country already exists");
         }
     }
 
@@ -106,7 +113,7 @@ public class CountryServiceImpl {
         }
 
         if (CacheManager.containsKey(COUNTRY_PRIMARY_KEY)) {
-            List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>) CacheManager.get("/api/countries");
+            List<CountryDTOWithUsers> countries = (List<CountryDTOWithUsers>) CacheManager.get(COUNTRY_PRIMARY_KEY);
             Optional<CountryDTOWithUsers> findResult = countries.stream()
                     .filter(countryDTOWithUsers -> countryDTOWithUsers
                             .getName().equals(countryOldName)).findFirst();
@@ -114,7 +121,7 @@ public class CountryServiceImpl {
             List<UserDTO> countryUsers = findResult.get().getUsers();
 
             temp.setUsers(countryUsers);
-            countries.removeIf(CountryDTOWithUsers -> CountryDTOWithUsers.getName().equals(countryOldName));
+            countries.removeIf(countryDTOWithUsers -> countryDTOWithUsers.getName().equals(countryOldName));
             countries.add(temp);
             CacheManager.put(COUNTRY_PRIMARY_KEY, countries);
         }
