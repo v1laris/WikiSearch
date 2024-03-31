@@ -301,7 +301,7 @@ public class CacheService {
             return (List<CountryDTOWithUsers>)
                     CacheManager.get(CachePrimaryKeys.COUNTRY_PRIMARY_KEY);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public void updateCountry(final Country country, final String countryOldName) {
