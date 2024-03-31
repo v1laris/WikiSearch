@@ -73,5 +73,5 @@ public final class CacheManager {
         return CACHE.containsKey(key);
     }
 
-    private CacheManager() { };
+    private CacheManager() { }
 }

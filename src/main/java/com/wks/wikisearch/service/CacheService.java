@@ -6,6 +6,7 @@ import com.wks.wikisearch.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -300,7 +301,7 @@ public class CacheService {
             return (List<CountryDTOWithUsers>)
                     CacheManager.get(CachePrimaryKeys.COUNTRY_PRIMARY_KEY);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public void updateCountry(final Country country, final String countryOldName) {
