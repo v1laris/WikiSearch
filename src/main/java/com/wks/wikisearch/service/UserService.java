@@ -109,6 +109,7 @@ public class UserService {
             if (!Objects.equals(userToUpdate.getEmail(), user.getEmail()) && repository.existsByEmail(user.getEmail())) {
                 throw new ResourceAlreadyExistsException("User with this email already registered.");
             }
+            //
             cacheService.updateUser(userToUpdate, user);
             userCustomRepository.updateUser(userToUpdate);
         }
