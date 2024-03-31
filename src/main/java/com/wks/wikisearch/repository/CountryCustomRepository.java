@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 public class CountryCustomRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public CountryCustomRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CountryCustomRepository(final JdbcTemplate dbTemplate) {
+        this.jdbcTemplate = dbTemplate;
     }
 
-    public void updateCountry(Country country) {
+    public void updateCountry(final Country country) {
         String sql = "UPDATE country SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, country.getName(), country.getId());
     }

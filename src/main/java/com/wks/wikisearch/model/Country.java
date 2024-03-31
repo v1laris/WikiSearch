@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 
-import java.util.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,7 +16,9 @@ public class Country {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "country",
+            cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<User> countryUsers;
 }

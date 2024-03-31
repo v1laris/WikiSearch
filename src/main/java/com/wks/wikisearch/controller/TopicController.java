@@ -1,10 +1,13 @@
 package com.wks.wikisearch.controller;
 
-import com.wks.wikisearch.dto.*;
+
+import com.wks.wikisearch.dto.TopicDTOWithArticles;
 import com.wks.wikisearch.model.Topic;
 import com.wks.wikisearch.service.TopicService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -21,32 +24,42 @@ public class TopicController {
     }
 
     @PostMapping("save_topic")
-    public void saveTopic(@RequestBody Topic topic) {
+    public ResponseEntity<String> saveTopic(@RequestBody final Topic topic) {
         service.saveTopic(topic);
+        return new ResponseEntity<>("Topic saved successfully", HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
-    public TopicDTOWithArticles findByName(@PathVariable String name) {
-        return service.findByName(name);
+    public ResponseEntity<TopicDTOWithArticles> findByName(@PathVariable final String name) {
+        return ResponseEntity.ok(service.findByName(name));
     }
 
     @DeleteMapping("delete_topic/{name}")
-    public void deleteTopic(@PathVariable String name) {
+    public ResponseEntity<String> deleteTopic(@PathVariable final String name) {
         service.deleteTopic(name);
+        return new ResponseEntity<>("Topic deleted successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/{topicName}/articles/add_new")
-    public void addNewArticleByTopicName(@PathVariable String topicName, @RequestParam String articleTitle) {
+    public ResponseEntity<String> addNewArticleByTopicName(
+            @PathVariable final String topicName,
+            @RequestParam final String articleTitle) {
         service.addNewArticleByTopicName(topicName, articleTitle);
+        return new ResponseEntity<>("Successfully added new article to the topic", HttpStatus.OK);
     }
 
     @PutMapping("/{topicName}/articles/detach")
-    public void detachArticleFromTopicByName(@PathVariable String topicName, @RequestParam String articleTitle) {
+    public ResponseEntity<String> detachArticleFromTopicByName(
+            @PathVariable final String topicName,
+            @RequestParam final String articleTitle) {
         service.detachArticleByTopicName(topicName, articleTitle);
+        return new ResponseEntity<>("Successfully detached article from the topic", HttpStatus.OK);
     }
 
     @PutMapping("update_topic/{topicOldName}")
-    public void updateTopic(@PathVariable String topicOldName, @RequestBody Topic topic) {
+    public ResponseEntity<String> updateTopic(@PathVariable final String topicOldName,
+                                              @RequestBody final Topic topic) {
         service.updateTopic(topicOldName, topic);
+        return new ResponseEntity<>("Topic updated successfully", HttpStatus.CREATED);
     }
 }

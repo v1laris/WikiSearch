@@ -2,7 +2,8 @@ package com.wks.wikisearch.model;
 
 import jakarta.persistence.*;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 import lombok.Data;
 
@@ -18,7 +19,9 @@ public class Article {
     private String url;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "article_topic", joinColumns = @JoinColumn(name = "article_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    @JoinTable(name = "article_topic",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id"))
     private Set<Topic> topics = new HashSet<>();
 
     public Article() {

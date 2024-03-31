@@ -1,11 +1,11 @@
 package com.wks.wikisearch.service;
 
 import com.wks.wikisearch.cache.CacheManager;
-import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.dto.ArticleDTOWithTopics;
-import com.wks.wikisearch.dto.TopicDTO;
-import com.wks.wikisearch.dto.TopicDTOWithArticles;
+import com.wks.wikisearch.exception.ResourceAlreadyExistsException;
+import com.wks.wikisearch.exception.ResourceNotFoundException;
 import com.wks.wikisearch.model.Article;
+import com.wks.wikisearch.model.CachePrimaryKeys;
 import com.wks.wikisearch.repository.ArticleCustomRepository;
 import com.wks.wikisearch.repository.ArticleRepository;
 import com.wks.wikisearch.repository.TopicCustomRepository;
@@ -24,137 +24,118 @@ public class ArticleService {
     private final TopicRepository topicRepository;
     private final ArticleCustomRepository articleCustomRepository;
     private final TopicCustomRepository topicCustomRepository;
-    private static final String ARTICLE_PRIMARY_KEY = "articles";
-    private static final String TOPIC_PRIMARY_KEY = "topics";
+    private final CacheService cacheService;
 
-    public List<ArticleDTOWithTopics> findAllArticles(){
-        if (CacheManager.containsKey(ARTICLE_PRIMARY_KEY)) {
-            return (List<ArticleDTOWithTopics>)CacheManager.get(ARTICLE_PRIMARY_KEY);
+    public List<ArticleDTOWithTopics> findAllArticles() {
+        if (CacheManager.containsKey(CachePrimaryKeys.ARTICLE_PRIMARY_KEY)) {
+            return (List<ArticleDTOWithTopics>) CacheManager
+                    .get(CachePrimaryKeys.ARTICLE_PRIMARY_KEY);
         } else {
-            List<Article> articles = articleCustomRepository.findAllArticlesWithTopics();
-            List<ArticleDTOWithTopics> articleDTOsWithTopics = new ArrayList<>();
+            List<Article> articles =
+                    articleCustomRepository.findAllArticlesWithTopics();
+            List<ArticleDTOWithTopics> articleDTOsWithTopics =
+                    new ArrayList<>();
             for (Article article : articles) {
-                ArticleDTOWithTopics articleDTOWithTopics = Conversion.convertArticleToDTOWithTopics(article);
+                ArticleDTOWithTopics articleDTOWithTopics =
+                        Conversion.convertArticleToDTOWithTopics(article);
                 articleDTOsWithTopics.add(articleDTOWithTopics);
             }
-            for(ArticleDTOWithTopics article : articleDTOsWithTopics){
-                CacheManager.put(ARTICLE_PRIMARY_KEY + "/" + article.getTitle(), article);
+            for (ArticleDTOWithTopics article : articleDTOsWithTopics) {
+                cacheService.addArticle(article);
             }
-            CacheManager.put(ARTICLE_PRIMARY_KEY, articleDTOsWithTopics);
+            CacheManager.put(CachePrimaryKeys.ARTICLE_PRIMARY_KEY, articleDTOsWithTopics);
             return articleDTOsWithTopics;
         }
+
     }
 
-    public ArticleDTOWithTopics findByTitle(String title) {
-        String cacheKey = ARTICLE_PRIMARY_KEY + "/" + title;
-        if (CacheManager.containsKey(cacheKey)) {
-            return (ArticleDTOWithTopics) CacheManager.get(cacheKey);
+    public ArticleDTOWithTopics findByTitle(final String title) {
+        ArticleDTOWithTopics article = cacheService.getArticle(title);
+        if (article != null) {
+            return article;
         } else {
-            if(CacheManager.containsKey(ARTICLE_PRIMARY_KEY)) {
-                List<ArticleDTOWithTopics> articles = (List<ArticleDTOWithTopics>) CacheManager.get(ARTICLE_PRIMARY_KEY);
-                Optional<ArticleDTOWithTopics> findResult = articles.stream()
-                        .filter(articleDTOWithTopics -> articleDTOWithTopics
-                                .getTitle().equals(title)).findFirst();
-                if(findResult.isPresent()){
-                    CacheManager.put(cacheKey, findResult.get());
-                    return findResult.get();
-                }
-            }
-            if(articleRepository.existsByTitle(title)) {
-                ArticleDTOWithTopics result = Conversion.convertArticleToDTOWithTopics(articleCustomRepository.findArticleByTitle(title));
-
-                CacheManager.put(cacheKey, result);
+            if (articleRepository.existsByTitle(title)) {
+                ArticleDTOWithTopics result =
+                        Conversion.convertArticleToDTOWithTopics(
+                                articleCustomRepository
+                                        .findArticleByTitle(title));
+                cacheService.addArticle(result);
                 return result;
+            } else {
+                throw new ResourceNotFoundException("Requested non-existent article");
             }
-            return null;
         }
     }
 
-    public void saveArticle(Article article) {
-        if(articleRepository.existsByTitle(article.getTitle())) {
-            throw new IllegalStateException("Article exists.");
+    public void saveArticle(final Article article) {
+        if (articleRepository.existsByTitle(article.getTitle())) {
+            throw new ResourceAlreadyExistsException("Article with this title already exists");
         }
-        if(CacheManager.containsKey(ARTICLE_PRIMARY_KEY)){
-            List<ArticleDTOWithTopics> articles = (List<ArticleDTOWithTopics>) CacheManager.get(ARTICLE_PRIMARY_KEY);
+        cacheService.addArticle(Conversion.convertArticleToDTOWithTopics(article));
+        if (CacheManager.containsKey(CachePrimaryKeys.ARTICLE_PRIMARY_KEY)) {
+            List<ArticleDTOWithTopics> articles =
+                    (List<ArticleDTOWithTopics>) CacheManager.get(CachePrimaryKeys.ARTICLE_PRIMARY_KEY);
             articles.add(Conversion.convertArticleToDTOWithTopics(article));
-            CacheManager.put(ARTICLE_PRIMARY_KEY, articles);
+            CacheManager.put(CachePrimaryKeys.ARTICLE_PRIMARY_KEY, articles);
         }
         articleRepository.save(article);
     }
 
     @Transactional
-    public void deleteArticle(String title) {
-        String cacheKey = ARTICLE_PRIMARY_KEY + "/" + title;
-        CacheManager.remove(cacheKey);
-        if(CacheManager.containsKey(ARTICLE_PRIMARY_KEY)) {
-            List<ArticleDTOWithTopics> topics = (List<ArticleDTOWithTopics>) CacheManager.get(ARTICLE_PRIMARY_KEY);
-            topics.removeIf(articleDTOWithTopics -> articleDTOWithTopics.getTitle().equals(title));
-            CacheManager.put(ARTICLE_PRIMARY_KEY, topics);
-        }
-        CacheManager.remove(TOPIC_PRIMARY_KEY);
-        if(articleRepository.existsByTitle(title)) {
+    public void deleteArticle(final String title) {
+        cacheService.removeArticle(title);
+        if (articleRepository.existsByTitle(title)) {
             Article article = articleCustomRepository.findArticleByTitle(title);
             articleCustomRepository.deleteArticle(article.getId());
+        } else {
+            throw new ResourceNotFoundException("Error deleting non-existent article");
         }
     }
 
-    public void updateArticle(Article article, String articleOldTitle) {
-        String cacheKey = ARTICLE_PRIMARY_KEY + "/" + article.getTitle();
-        if(CacheManager.containsKey(cacheKey)) {
-            ArticleDTOWithTopics temp = (ArticleDTOWithTopics) CacheManager.get(cacheKey);
-            if(article.getTitle() != null) {
-                temp.setTitle(article.getTitle());
+    public void updateArticle(
+            final Article article,
+            final String articleOldTitle) {
+        if (articleRepository.existsByTitle(articleOldTitle)) {
+            if (!articleRepository.existsByTitle(article.getTitle())) {
+                cacheService.updateArticle(articleOldTitle, article);
+                articleCustomRepository.updateArticle(article);
+            } else {
+                throw new ResourceAlreadyExistsException("Article with this title already exists");
             }
-            if(article.getUrl() != null) {
-                temp.setUrl(article.getUrl());
-            }
-            for(TopicDTO topic : temp.getTopics()){
-                String topicCacheKey = TOPIC_PRIMARY_KEY + "/" + topic.getName();
-                TopicDTOWithArticles tempTopic = (TopicDTOWithArticles) CacheManager.get(topicCacheKey);
-                List<ArticleDTO> tempTopicsArticles = tempTopic.getArticles();
-                tempTopicsArticles.removeIf(articleDTO -> articleDTO.getTitle().equals(articleOldTitle));
-                tempTopicsArticles.add(Conversion.convertArticleToDTO(article));
-                tempTopic.setArticles(tempTopicsArticles);
-                CacheManager.put(topicCacheKey, tempTopic);
-            }
-            CacheManager.put(cacheKey, temp);
-
-        }
-        CacheManager.remove(TOPIC_PRIMARY_KEY);
-        Optional<Article> temp = articleRepository.findById(article.getId());
-        if(temp.isPresent()){
-            articleCustomRepository.updateArticle(article);
+        } else {
+            throw new ResourceNotFoundException("Updating non-existent article");
         }
     }
 
-    private void clearCacheItems(String topicName, String articleTitle) {
-        String cacheKeyTopic = "/api/topics/" + topicName;
-        String cacheKeyArticle = "/api/articles/" + articleTitle;
-        if(CacheManager.containsKey(cacheKeyTopic)){
-            CacheManager.remove(cacheKeyTopic);
+    public void addNewTopicByArticleTitle(
+            final String articleTitle,
+            final String topicName) {
+        if (!articleRepository.existsByTitle(articleTitle)
+                || !topicRepository.existsByName(topicName)) {
+            throw new ResourceNotFoundException("This article or topic doesn't exist");
         }
-        if(CacheManager.containsKey(cacheKeyArticle)){
-            CacheManager.remove(cacheKeyArticle);
-        }
-        CacheManager.remove("/api/topics");
-        CacheManager.remove("/api/articles");
+        cacheService.clearCacheItems(topicName, articleTitle);
+        articleCustomRepository.addTopicToArticle(
+                articleCustomRepository
+                        .findArticleByTitle(articleTitle)
+                        .getId(),
+                topicCustomRepository
+                        .findTopicByName(topicName)
+                        .getId());
     }
 
-    public void addNewTopicByArticleTitle(String articleTitle, String topicName) {
-        if(!articleRepository.existsByTitle(articleTitle) || !topicRepository.existsByName(topicName)){
-            return;
+    public void detachTopicByArticleName(final String articleTitle,
+                                         final String topicName) {
+        if (!articleRepository.existsByTitle(articleTitle)
+                || !topicRepository.existsByName(topicName)) {
+            throw new ResourceNotFoundException("This article or topic doesn't exist");
         }
-        clearCacheItems(topicName, articleTitle);
-        articleCustomRepository.addTopicToArticle(articleCustomRepository.findArticleByTitle(articleTitle).getId(),
-                topicCustomRepository.findTopicByName(topicName).getId());
-    }
-
-    public void detachTopicByArticleName(String articleTitle, String topicName) {
-        if(!articleRepository.existsByTitle(articleTitle) || !topicRepository.existsByName(topicName)){
-            return;
-        }
-        clearCacheItems(topicName, articleTitle);
-        articleCustomRepository.detachTopicFromArticle(articleCustomRepository.findArticleByTitle(articleTitle).getId(),
-                topicCustomRepository.findTopicByName(topicName).getId());
+        cacheService.clearCacheItems(topicName, articleTitle);
+        articleCustomRepository.detachTopicFromArticle(
+                articleCustomRepository
+                        .findArticleByTitle(articleTitle)
+                        .getId(),
+                topicCustomRepository
+                        .findTopicByName(topicName).getId());
     }
 }

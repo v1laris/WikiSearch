@@ -23,7 +23,10 @@ public class User {
     private String email;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY,
+                cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.PERSIST})
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     @JsonBackReference
     private Country country;
@@ -35,8 +38,7 @@ public class User {
         // no args constructor
     }
 
-    public int getAge(){
+    public int getAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
-
     }
 }

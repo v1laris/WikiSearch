@@ -9,5 +9,5 @@ public class ArticleDTOWithTopics {
     private Long id;
     private String title;
     private String url;
-    List<TopicDTO> topics;
+    private List<TopicDTO> topics;
 }

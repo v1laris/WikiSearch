@@ -8,5 +8,5 @@ import java.util.List;
 public class TopicDTOWithArticles {
     private Long id;
     private String name;
-    List<ArticleDTO> articles;
+    private List<ArticleDTO> articles;
 }

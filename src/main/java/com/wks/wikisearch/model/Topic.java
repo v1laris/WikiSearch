@@ -1,7 +1,8 @@
 package com.wks.wikisearch.model;
 
 import jakarta.persistence.*;
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 import lombok.Data;
 
 @Data
@@ -17,9 +18,9 @@ public class Topic {
     @ManyToMany(mappedBy = "topics", fetch = FetchType.LAZY)
     private Set<Article> articles = new HashSet<>();
 
-    public Topic(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public Topic(final Long newId, final String newName) {
+        this.id = newId;
+        this.name = newName;
         this.articles = new HashSet<>();
     }
 

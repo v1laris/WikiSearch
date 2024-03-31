@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class RequestsController {
     private final RequestsService service;
+
     @GetMapping("/{keyword}")
-    public String search(@PathVariable String keyword) {
+    public String search(@PathVariable final String keyword) {
         return service.search(keyword);
     }
 }

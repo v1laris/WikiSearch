@@ -2,9 +2,11 @@ package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.dto.CountryDTOWithUsers;
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.service.CountryServiceImpl;
+import com.wks.wikisearch.service.CountryService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/countries")
 @AllArgsConstructor
 public class CountriesController {
-    private final CountryServiceImpl service;
+    private final CountryService service;
 
     @GetMapping
     public List<CountryDTOWithUsers> findAllCountries() {
@@ -20,22 +22,28 @@ public class CountriesController {
     }
 
     @PostMapping("save_country")
-    public void saveCountry(@RequestBody Country country) {
+    public ResponseEntity<String> saveCountry(@RequestBody final Country country) {
         service.saveCountry(country);
+        return new ResponseEntity<>("Country saved successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/{name}")
-    public CountryDTOWithUsers findByName(@PathVariable String name) {
-        return service.findByName(name);
+    public ResponseEntity<CountryDTOWithUsers> findByName(@PathVariable final String name) {
+        return ResponseEntity.ok(service.findByName(name));
     }
 
     @DeleteMapping("delete_country/{name}")
-    public void deleteCountry(@PathVariable String name) {
+    public ResponseEntity<String> deleteCountry(@PathVariable final String name) {
         service.deleteCountry(name);
+        return new ResponseEntity<>("Country deleted successfully", HttpStatus.OK);
     }
 
     @PutMapping("update_country/{countryOldName}")
-    public void updateCountry(@PathVariable String countryOldName, @RequestBody Country country) {
+    public ResponseEntity<String> updateCountry(
+            @PathVariable final String countryOldName,
+            @RequestBody final Country country) {
         service.updateCountry(country, countryOldName);
+        return new ResponseEntity<>("Country updated successfully", HttpStatus.OK);
+
     }
 }

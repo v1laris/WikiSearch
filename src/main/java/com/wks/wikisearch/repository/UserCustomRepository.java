@@ -10,12 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCustomRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserCustomRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public UserCustomRepository(final JdbcTemplate dbTemplate) {
+        this.jdbcTemplate = dbTemplate;
     }
 
-    public void updateUser(User user) {
-        String sql = "UPDATE users SET first_name = ?, last_name = ?, date_of_birth = ?, email = ?, country_id = ? WHERE id = ?";
+    public void updateUser(final User user) {
+        String sql = "UPDATE users SET first_name = ?, last_name = ?, "
+                + "date_of_birth = ?, email = ?, country_id = ? WHERE id = ?";
         jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(),
                 user.getDateOfBirth(), user.getEmail(),
                 user.getCountry().getId(), user.getId());

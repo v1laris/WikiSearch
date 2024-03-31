@@ -11,10 +11,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 public class RequestsService {
     private static final String WIKIPEDIA_API_URL = "https://ru.wikipedia.org/w/api.php";
 
-    public String search(String query) {
+    public String search(final String query) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = WIKIPEDIA_API_URL + "?action=query&list=search&srsearch=" + query + "&format=json";
+        String url = WIKIPEDIA_API_URL
+                + "?action=query&list=search&srsearch="
+                + query + "&format=json";
 
         String response = restTemplate.getForObject(url, String.class);
 
