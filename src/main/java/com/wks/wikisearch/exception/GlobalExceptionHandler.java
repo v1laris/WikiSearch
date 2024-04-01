@@ -1,5 +1,6 @@
 package com.wks.wikisearch.exception;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,5 +80,27 @@ public class GlobalExceptionHandler {
                 "Resource already exists: " + ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<ErrorMessage> handleBadRequestException(
+            final BadRequestException ex,
+            final WebRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                "Bad request: " + ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<ErrorMessage> handleInternalServerErrorException(
+            final Exception ex,
+            final WebRequest request) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                new Date(),
+                "Potato server, something went wrong: " + ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

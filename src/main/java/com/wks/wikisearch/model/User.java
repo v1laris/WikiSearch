@@ -2,6 +2,9 @@ package com.wks.wikisearch.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,9 +19,14 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    @NotBlank(message = "First name is mandatory")
     private String firstName;
+    @NotBlank(message = "Last name is mandatory")
     private String lastName;
+
     private LocalDate dateOfBirth;
+
+    @Email(message = "Wrong email")
     @Column(name = "email", unique = true)
     private String email;
 
