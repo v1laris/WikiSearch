@@ -68,7 +68,11 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 
 	</dependencies>
@@ -104,6 +108,17 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>com/wks.wikisearch/aspect/**</exclude>
+								<exclude>com/wks.wikisearch/config/**</exclude>
+								<exclude>com/wks.wikisearch/controller/**</exclude>
+								<exclude>com/wks.wikisearch/dto/**</exclude>
+								<exclude>com/wks.wikisearch/exception/**</exclude>
+								<exclude>com/wks.wikisearch/model/**</exclude>
+								<exclude>com/wks.wikisearch/repository/**</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
