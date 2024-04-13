@@ -1,10 +1,8 @@
 package com.wks.wikisearch.service;
 
-import com.wks.wikisearch.cache.CacheManager;
 import com.wks.wikisearch.dto.UserDTOWithCountry;
-import com.wks.wikisearch.exception.ResourceAlreadyExistsException;
-import com.wks.wikisearch.exception.ResourceNotFoundException;
-import com.wks.wikisearch.model.CachePrimaryKeys;
+import com.wks.wikisearch.exception.ObjectAlreadyExistsException;
+import com.wks.wikisearch.exception.ObjectNotFoundException;
 import com.wks.wikisearch.model.User;
 import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.UserCustomRepository;
@@ -29,25 +27,15 @@ public class UserService {
     private final UserRepository repository;
     private final UserCustomRepository userCustomRepository;
     private final CountryRepository countryRepository;
-    private final CacheService cacheService;
 
     public List<UserDTOWithCountry> findAllUsers() {
-        if (CacheManager.containsKey(CachePrimaryKeys.USER_PRIMARY_KEY)) {
-            return (List<UserDTOWithCountry>) CacheManager.get(CachePrimaryKeys.USER_PRIMARY_KEY);
-
-        } else {
-            List<User> users = repository.findAll();
-            List<UserDTOWithCountry> appUserDTOs = new ArrayList<>();
-            for (User user : users) {
-                UserDTOWithCountry appUserDTO = Conversion.convertAppUserWithCountry(user);
-                appUserDTOs.add(appUserDTO);
-            }
-            for (UserDTOWithCountry user : appUserDTOs) {
-                CacheManager.put(CachePrimaryKeys.USER_PRIMARY_KEY + user.getEmail(), user);
-            }
-            CacheManager.put(CachePrimaryKeys.USER_PRIMARY_KEY, appUserDTOs);
-            return appUserDTOs;
+        List<User> users = repository.findAll();
+        List<UserDTOWithCountry> appUserDTOs = new ArrayList<>();
+        for (User user : users) {
+            UserDTOWithCountry appUserDTO = Conversion.convertAppUserWithCountry(user);
+            appUserDTOs.add(appUserDTO);
         }
+        return appUserDTOs;
     }
 
     public List<UserDTOWithCountry> findUsersByDateOfBirth(final Integer startYear, final Integer endYear) {
@@ -67,37 +55,18 @@ public class UserService {
             Country country = countryRepository.findCountryByName(countryName);
             user.setCountry(country);
             repository.save(user);
-            if (CacheManager.containsKey(CachePrimaryKeys.USER_PRIMARY_KEY)) {
-                List<UserDTOWithCountry> users =
-                        (List<UserDTOWithCountry>)
-                                CacheManager.get(CachePrimaryKeys.USER_PRIMARY_KEY);
-                users.add(Conversion.convertAppUserWithCountry(user));
-                CacheManager.put(CachePrimaryKeys.USER_PRIMARY_KEY, users);
-            }
-            if (CacheManager.containsKey(CachePrimaryKeys.COUNTRY_PRIMARY_KEY + countryName)) {
-                CacheManager.remove(CachePrimaryKeys.COUNTRY_PRIMARY_KEY + countryName);
-                CacheManager.remove(CachePrimaryKeys.COUNTRY_PRIMARY_KEY);
-            }
         } else {
-            throw new ResourceAlreadyExistsException("User with this email already exists");
+            throw new ObjectAlreadyExistsException("User with this email already exists");
         }
     }
 
 
     public UserDTOWithCountry findByEmail(final String email) {
-        UserDTOWithCountry user = cacheService.getUser(email);
-        if (user != null) {
-            return user;
+        if (repository.existsByEmail(email)) {
+            return Conversion.convertAppUserWithCountry(
+                    repository.findUserByEmail(email));
         } else {
-            if (repository.existsByEmail(email)) {
-                UserDTOWithCountry result =
-                        Conversion.convertAppUserWithCountry(
-                                repository.findUserByEmail(email));
-                cacheService.addUser(result);
-                return result;
-            } else {
-                throw new ResourceNotFoundException("Requested non-existent user");
-            }
+            throw new ObjectNotFoundException("Requested non-existent user");
         }
     }
 
@@ -106,19 +75,18 @@ public class UserService {
         if (temp.isPresent()) {
             User userToUpdate = temp.get();
             user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
-            if (!Objects.equals(userToUpdate.getEmail(), user.getEmail()) && repository.existsByEmail(user.getEmail())) {
-                throw new ResourceAlreadyExistsException("User with this email already registered.");
+            if (!Objects.equals(userToUpdate.getEmail(), user.getEmail())
+                    && repository.existsByEmail(user.getEmail())) {
+                throw new ObjectAlreadyExistsException("User with this email already registered.");
             }
-            cacheService.updateUser(userToUpdate, user);
             userCustomRepository.updateUser(userToUpdate);
         }
     }
 
     public void deleteUser(final String email) {
         if (!repository.existsByEmail(email)) {
-            throw new ResourceNotFoundException("Error deleting non-existent user");
+            throw new ObjectNotFoundException("Error deleting non-existent user");
         }
-        cacheService.removeUser(email);
         repository.deleteByEmail(email);
     }
 }

@@ -12,4 +12,10 @@ spring:
       hibernate:
         format_sql: true
     open-in-view: false
+logging:
+  file:
+    name: logfile.log
+  level:
+    root: info
+
 

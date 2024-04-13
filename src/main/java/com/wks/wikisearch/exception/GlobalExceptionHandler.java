@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class})
+    @ExceptionHandler({ObjectNotFoundException.class})
     public ResponseEntity<ErrorMessage> handleResourceNotFoundException(
-            final ResourceNotFoundException ex,
+            final ObjectNotFoundException ex,
             final WebRequest request) {
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND.value(),
                 new Date(),
@@ -71,9 +71,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ResourceAlreadyExistsException.class})
+    @ExceptionHandler({ObjectAlreadyExistsException.class})
     public ResponseEntity<ErrorMessage> handleResourceAlreadyExistsException(
-            final ResourceAlreadyExistsException ex,
+            final ObjectAlreadyExistsException ex,
             final WebRequest request) {
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.CONFLICT.value(),
                 new Date(),

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,7 +25,10 @@ public class UsersController {
 
     @PostMapping("/save_user/{countryName}")
     public ResponseEntity<String> saveUser(@Valid @RequestBody final User user,
-                         @Valid @PathVariable final String countryName) {
+                         @Valid @PathVariable final String countryName) throws Exception {
+        if(Objects.equals(countryName, "Niggerland")){
+            throw new Exception("No racism");
+        }
         service.saveUserWithCountry(user, countryName);
         return new ResponseEntity<>("User saved successfully", HttpStatus.CREATED);
     }

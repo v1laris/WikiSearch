@@ -12,26 +12,26 @@ import java.util.List;
 
 public class Conversion {
 
-    private Conversion(){
+    private Conversion() {
 
     }
 
-    public static TopicDTO convertTopicToDTO(Topic topic) {
+    public static TopicDTO convertTopicToDTO(final Topic topic) {
         TopicDTO topicDTO = new TopicDTO();
         topicDTO.setId(topic.getId());
         topicDTO.setName(topic.getName());
         return topicDTO;
     }
 
-    public static TopicDTOWithArticles convertTopicToDTOWithArticles(Topic topic) {
-        if(topic == null){
+    public static TopicDTOWithArticles convertTopicToDTOWithArticles(final Topic topic) {
+        if (topic == null) {
             return null;
         }
         TopicDTOWithArticles topicDTO = new TopicDTOWithArticles();
         topicDTO.setId(topic.getId());
         topicDTO.setName(topic.getName());
 
-        if(topic.getArticles() != null) {
+        if (topic.getArticles() != null) {
             List<Article> articles = topic.getArticles().stream().toList();
             List<ArticleDTO> articleDTOs = new ArrayList<>();
             for (Article article : articles) {
@@ -42,7 +42,7 @@ public class Conversion {
         return topicDTO;
     }
 
-    public static ArticleDTO convertArticleToDTO(Article article) {
+    public static ArticleDTO convertArticleToDTO(final Article article) {
         ArticleDTO articleDTO = new ArticleDTO();
         articleDTO.setId(article.getId());
         articleDTO.setTitle(article.getTitle());
@@ -50,8 +50,8 @@ public class Conversion {
         return articleDTO;
     }
 
-    public static ArticleDTOWithTopics convertArticleToDTOWithTopics(Article article) {
-        if(article == null){
+    public static ArticleDTOWithTopics convertArticleToDTOWithTopics(final Article article) {
+        if (article == null) {
             return null;
         }
         ArticleDTOWithTopics articleDTOWithTopics = new ArticleDTOWithTopics();
@@ -59,7 +59,7 @@ public class Conversion {
         articleDTOWithTopics.setTitle(article.getTitle());
         articleDTOWithTopics.setUrl(article.getUrl());
 
-        if(article.getTopics() != null) {
+        if (article.getTopics() != null) {
             List<Topic> topics = article.getTopics().stream().toList();
             List<TopicDTO> topicDTOs = new ArrayList<>();
             for (Topic topic : topics) {
@@ -70,7 +70,7 @@ public class Conversion {
         return articleDTOWithTopics;
     }
 
-    public static CountryDTO convertCountryToDTO(Country country) {
+    public static CountryDTO convertCountryToDTO(final Country country) {
         CountryDTO countryDTO = new CountryDTO();
 
         countryDTO.setId(country.getId());
@@ -79,15 +79,15 @@ public class Conversion {
         return countryDTO;
     }
 
-    public static CountryDTOWithUsers convertCountryToDTOWithUsers(Country country) {
-        if(country == null){
+    public static CountryDTOWithUsers convertCountryToDTOWithUsers(final Country country) {
+        if (country == null) {
             return null;
         }
         CountryDTOWithUsers countryDTOWithUsers = new CountryDTOWithUsers();
 
         countryDTOWithUsers.setId(country.getId());
         countryDTOWithUsers.setName(country.getName());
-        if(country.getCountryUsers() != null) {
+        if (country.getCountryUsers() != null) {
             List<User> users = country.getCountryUsers().stream().toList();
             List<UserDTO> userDTOs = new ArrayList<>();
             for (User user : users) {
@@ -99,7 +99,7 @@ public class Conversion {
         return countryDTOWithUsers;
     }
 
-    public static UserDTO convertAppUserToDTO(User appUser) {
+    public static UserDTO convertAppUserToDTO(final User appUser) {
         UserDTO appUserDTO = new UserDTO();
         appUserDTO.setId(appUser.getId());
         appUserDTO.setFirstName(appUser.getFirstName());
@@ -110,7 +110,7 @@ public class Conversion {
         return appUserDTO;
     }
 
-    public static UserDTOWithCountry convertAppUserWithCountry(User appUser) {
+    public static UserDTOWithCountry convertAppUserWithCountry(final User appUser) {
         UserDTOWithCountry appUserDTOWithCountry = new UserDTOWithCountry();
 
         appUserDTOWithCountry.setId(appUser.getId());
@@ -123,6 +123,4 @@ public class Conversion {
 
         return appUserDTOWithCountry;
     }
-
-
 }
