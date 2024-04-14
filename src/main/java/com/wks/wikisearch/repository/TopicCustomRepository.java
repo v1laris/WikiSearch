@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Types;
 import java.util.*;
 
 @Repository
@@ -50,20 +51,19 @@ public class TopicCustomRepository {
     }
 
     public Topic findTopicByName(final String name) {
-        String sql = "SELECT t.*, a.id AS article_id, a.title "
-                + "AS article_title, a.url AS article_url "
+        String sql = "SELECT t.*, a.id AS article_id, a.title AS article_title, a.url AS article_url "
                 + "FROM topic t "
                 + "LEFT JOIN article_topic at ON t.id = at.topic_id "
                 + "LEFT JOIN article a ON at.article_id = a.id "
                 + "WHERE t.name = ?";
 
         List<Topic> topics = jdbcTemplate.query(sql,
-                new Object[]{name}, (rs, rowNum) -> {
-            Topic a = new Topic();
-            a.setId(rs.getLong("id"));
-            a.setName(rs.getString("name"));
-            return a;
-        });
+                new Object[]{name}, new int[]{Types.VARCHAR}, (rs, rowNum) -> {
+                    Topic t = new Topic();
+                    t.setId(rs.getLong("id"));
+                    t.setName(rs.getString("name"));
+                    return t;
+                });
 
         if (topics.isEmpty()) {
             return null;
@@ -72,24 +72,26 @@ public class TopicCustomRepository {
         Topic topic = topics.get(0);
 
         Set<Article> articles = new HashSet<>();
-
-        jdbcTemplate.query("SELECT t.* "
-                + "FROM article t "
-                + "LEFT JOIN article_topic at ON t.id = at.article_id "
-                + "WHERE at.topic_id = ?",
-                new Object[]{topic.getId()}, (rs, rowNum) -> {
-            Article article = new Article();
-            article.setId(rs.getLong("id"));
-            article.setTitle(rs.getString("title"));
-            article.setUrl(rs.getString("url"));
-            articles.add(article);
-            return null;
-        });
+        jdbcTemplate.query("SELECT a.id AS article_id, a.title AS article_title, a.url AS article_url "
+                        + "FROM article a "
+                        + "LEFT JOIN article_topic at ON a.id = at.article_id "
+                        + "WHERE at.topic_id = ?",
+                new Object[]{topic.getId()}, new int[]{Types.BIGINT}, (rs, rowNum) -> {
+                    Article article = new Article();
+                    article.setId(rs.getLong("article_id"));
+                    article.setTitle(rs.getString("article_title"));
+                    article.setUrl(rs.getString("article_url"));
+                    articles.add(article);
+                    return null;
+                });
 
         topic.setArticles(articles);
 
         return topic;
     }
+
+
+
 
     public void deleteTopic(final Long topicId) {
         String deleteArticleTopicSql = "DELETE FROM article_topic "

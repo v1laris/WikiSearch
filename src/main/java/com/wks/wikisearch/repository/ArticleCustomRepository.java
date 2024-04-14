@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Types;
 import java.util.*;
 
 @Repository
@@ -57,13 +58,13 @@ public class ArticleCustomRepository {
                 + "WHERE a.title = ?";
 
         List<Article> articles = jdbcTemplate.query(sql,
-                new Object[]{title}, (rs, rowNum) -> {
-            Article a = new Article();
-            a.setId(rs.getLong("id"));
-            a.setTitle(rs.getString("title"));
-            a.setUrl(rs.getString("url"));
-            return a;
-        });
+                new Object[]{title}, new int[]{Types.VARCHAR}, (rs, rowNum) -> {
+                    Article a = new Article();
+                    a.setId(rs.getLong("id"));
+                    a.setTitle(rs.getString("title"));
+                    a.setUrl(rs.getString("url"));
+                    return a;
+                });
 
         if (articles.isEmpty()) {
             return null;
@@ -73,21 +74,22 @@ public class ArticleCustomRepository {
 
         Set<Topic> topics = new HashSet<>();
         jdbcTemplate.query("SELECT t.* "
-                + "FROM topic t "
-                + "LEFT JOIN article_topic at ON t.id = at.topic_id "
-                + "WHERE at.article_id = ?",
-                new Object[]{article.getId()}, (rs, rowNum) -> {
-            Topic topic = new Topic();
-            topic.setId(rs.getLong("id"));
-            topic.setName(rs.getString("name"));
-            topics.add(topic);
-            return null;
-        });
+                        + "FROM topic t "
+                        + "LEFT JOIN article_topic at ON t.id = at.topic_id "
+                        + "WHERE at.article_id = ?",
+                new Object[]{article.getId()}, new int[]{Types.BIGINT}, (rs, rowNum) -> {
+                    Topic topic = new Topic();
+                    topic.setId(rs.getLong("id"));
+                    topic.setName(rs.getString("name"));
+                    topics.add(topic);
+                    return null;
+                });
 
         article.setTopics(topics);
 
         return article;
     }
+
 
     public void deleteArticle(final Long id) {
         String deleteArticleTopicSql = "DELETE FROM article_topic"
