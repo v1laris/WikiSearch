@@ -11,12 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.wks.wikisearch.repository.CountryRepository;
 
@@ -32,7 +28,7 @@ public class UserService {
     public List<UserDTOWithCountry> findAllUsers() {
         return repository.findAll().stream()
                 .map(Conversion::convertAppUserWithCountry)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

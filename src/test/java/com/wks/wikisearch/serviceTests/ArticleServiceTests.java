@@ -10,7 +10,6 @@ import com.wks.wikisearch.repository.ArticleRepository;
 import com.wks.wikisearch.repository.TopicCustomRepository;
 import com.wks.wikisearch.repository.TopicRepository;
 import com.wks.wikisearch.service.ArticleService;
-import com.wks.wikisearch.service.Conversion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
