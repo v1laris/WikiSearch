@@ -84,8 +84,10 @@ public class TopicService {
     }
 
     public void updateTopic(final String topicOldName, final Topic topic) {
-        Optional<Topic> temp = topicRepository.findById(topic.getId());
-        if (temp.isPresent()) {
+        if (topicRepository.existsByName(topicOldName)) {
+            if(!Objects.equals(topic.getName(), topicOldName) && topicRepository.existsByName(topic.getName())) {
+                throw new ObjectAlreadyExistsException("New name already exists");
+            }
             topicCustomRepository.updateTopic(topic);
         } else {
             throw new ObjectNotFoundException("Error updating non-existent topic");

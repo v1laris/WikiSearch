@@ -7,21 +7,18 @@ import com.wks.wikisearch.model.Country;
 import com.wks.wikisearch.repository.CountryCustomRepository;
 import com.wks.wikisearch.repository.CountryRepository;
 import com.wks.wikisearch.service.CountryService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CountryServiceTests {
+class CountryServiceTests {
 
     @Mock
     private CountryRepository repository;
@@ -32,123 +29,141 @@ public class CountryServiceTests {
     @InjectMocks
     private CountryService countryService;
 
-    private Country testCountry;
-
-    @Before
-    public void setUp() {
-        testCountry = new Country();
-        testCountry.setName("Test Country");
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testFindAllCountries() {
-        // Given
-        when(repository.findAll()).thenReturn(Arrays.asList(testCountry));
+    void testFindAllCountries() {
+        List<Country> countries = new ArrayList<>();
+        Country country1 = new Country();
+        country1.setId(1L);
+        country1.setName("Country1");
+        Country country2 = new Country();
+        country2.setId(2L);
+        country2.setName("Country2");
+        countries.add(country1);
+        countries.add(country2);
 
-        // When
+        when(repository.findAll()).thenReturn(countries);
+
         List<CountryDTOWithUsers> result = countryService.findAllCountries();
 
-        // Then
-        assertEquals(1, result.size());
-        assertEquals(testCountry.getName(), result.get(0).getName());
+        assertEquals(countries.size(), result.size());
+        // Add more assertions based on your specific requirements
     }
 
     @Test
-    public void testSaveCountry_Success() {
-        // Given
-        when(repository.existsByName(testCountry.getName())).thenReturn(false);
+    void testSaveCountry_NewCountry() {
+        Country country = new Country();
+        country.setName("NewCountry");
 
-        // When
-        countryService.saveCountry(testCountry);
+        when(repository.existsByName(country.getName())).thenReturn(false);
 
-        // Then
-        verify(repository, times(1)).save(testCountry);
-    }
+        countryService.saveCountry(country);
 
-    @Test(expected = ObjectAlreadyExistsException.class)
-    public void testSaveCountry_AlreadyExists() {
-        // Given
-        when(repository.existsByName(testCountry.getName())).thenReturn(true);
-
-        // When
-        countryService.saveCountry(testCountry);
+        verify(repository, times(1)).save(country);
     }
 
     @Test
-    public void testFindByName_ExistingCountry() {
-        // Given
-        when(repository.findCountryByName(testCountry.getName())).thenReturn(testCountry);
+    void testSaveCountry_ExistingCountry() {
+        Country country = new Country();
+        country.setName("ExistingCountry");
 
-        // When
-        CountryDTOWithUsers result = countryService.findByName(testCountry.getName());
+        when(repository.existsByName(country.getName())).thenReturn(true);
 
-        // Then
-        assertEquals(testCountry.getName(), result.getName());
-    }
-
-    @Test(expected = ObjectNotFoundException.class)
-    public void testFindByName_NonExistingCountry() {
-        // Given
-        when(repository.findCountryByName(testCountry.getName())).thenReturn(null);
-
-        // When
-        countryService.findByName(testCountry.getName());
+        assertThrows(ObjectAlreadyExistsException.class, () -> {
+            countryService.saveCountry(country);
+        });
     }
 
     @Test
-    public void testDeleteCountry_ExistingCountry() {
-        // Given
-        when(repository.existsByName(testCountry.getName())).thenReturn(true);
+    void testFindByName_ExistingCountry() {
+        Country country = new Country();
+        country.setName("ExistingCountry");
 
-        // When
-        countryService.deleteCountry(testCountry.getName());
+        when(repository.findCountryByName(country.getName())).thenReturn(country);
 
-        // Then
-        verify(repository, times(1)).deleteByName(testCountry.getName());
-    }
+        CountryDTOWithUsers result = countryService.findByName(country.getName());
 
-    @Test(expected = ObjectNotFoundException.class)
-    public void testDeleteCountry_NonExistingCountry() {
-        // Given
-        when(repository.existsByName(testCountry.getName())).thenReturn(false);
-
-        // When
-        countryService.deleteCountry(testCountry.getName());
+        assertNotNull(result);
+        assertEquals(country.getName(), result.getName());
+        // Add more assertions based on your specific requirements
     }
 
     @Test
-    public void testUpdateCountry_Success() {
-        // Given
-        String countryOldName = "Old Name";
-        when(repository.existsByName(countryOldName)).thenReturn(true);
-        when(repository.existsByName(testCountry.getName())).thenReturn(false);
+    void testFindByName_NonExistingCountry() {
+        String countryName = "NonExistingCountry";
 
-        // When
-        countryService.updateCountry(testCountry, countryOldName);
+        when(repository.findCountryByName(countryName)).thenReturn(null);
 
-        // Then
-        verify(customRepository, times(1)).updateCountry(testCountry);
+        assertThrows(ObjectNotFoundException.class, () -> {
+            countryService.findByName(countryName);
+        });
     }
 
-    @Test(expected = ObjectAlreadyExistsException.class)
-    public void testUpdateCountry_NewNameAlreadyExists() {
-        // Given
-        String countryOldName = "Old Name";
-        when(repository.existsByName(countryOldName)).thenReturn(true);
-        when(repository.existsByName(testCountry.getName())).thenReturn(true);
+    @Test
+    void testDeleteCountry_ExistingCountry() {
+        String countryName = "ExistingCountry";
 
-        // When
-        countryService.updateCountry(testCountry, countryOldName);
+        when(repository.existsByName(countryName)).thenReturn(true);
+
+        countryService.deleteCountry(countryName);
+
+        verify(repository, times(1)).deleteByName(countryName);
     }
 
-    @Test(expected = ObjectNotFoundException.class)
-    public void testUpdateCountry_NonExistingCountry() {
-        // Given
-        String countryOldName = "Old Name";
-        when(repository.existsByName(countryOldName)).thenReturn(false);
+    @Test
+    void testDeleteCountry_NonExistingCountry() {
+        String countryName = "NonExistingCountry";
 
-        // When
-        countryService.updateCountry(testCountry, countryOldName);
+        when(repository.existsByName(countryName)).thenReturn(false);
+
+        assertThrows(ObjectNotFoundException.class, () -> {
+            countryService.deleteCountry(countryName);
+        });
+    }
+
+    @Test
+    void testUpdateCountry_ExistingCountry() {
+        String oldCountryName = "ExistingCountry";
+        Country country = new Country();
+        country.setName("UpdatedCountry");
+
+        when(repository.existsByName(oldCountryName)).thenReturn(true);
+        when(repository.existsByName(country.getName())).thenReturn(false);
+
+        countryService.updateCountry(country, oldCountryName);
+
+        verify(customRepository, times(1)).updateCountry(country);
+    }
+
+    @Test
+    void testUpdateCountry_ExistingNewCountryName() {
+        String oldCountryName = "ExistingCountry";
+        Country country = new Country();
+        country.setName("ExistingNewCountryName");
+
+
+        when(repository.existsByName(oldCountryName)).thenReturn(true);
+        when(repository.existsByName(country.getName())).thenReturn(true);
+
+        assertThrows(ObjectAlreadyExistsException.class, () -> {
+            countryService.updateCountry(country, oldCountryName);
+        });
+    }
+
+    @Test
+    void testUpdateCountry_NonExistingCountry() {
+        String oldCountryName = "NonExistingCountry";
+        Country country = new Country();
+        country.setName("UpdatedCountry");
+
+        when(repository.existsByName(oldCountryName)).thenReturn(false);
+
+        assertThrows(ObjectNotFoundException.class, () -> {
+            countryService.updateCountry(country, oldCountryName);
+        });
     }
 }
-

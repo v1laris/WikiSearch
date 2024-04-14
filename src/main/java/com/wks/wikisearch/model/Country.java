@@ -2,6 +2,7 @@ package com.wks.wikisearch.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
 public class Country {
     @Id
     @GeneratedValue
@@ -21,4 +23,8 @@ public class Country {
             cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<User> countryUsers;
+
+    public Country() {
+        // no args constructor
+    }
 }

@@ -38,18 +38,6 @@ public class UserService {
         return appUserDTOs;
     }
 
-    public List<UserDTOWithCountry> findUsersByDateOfBirth(final Integer startYear, final Integer endYear) {
-        LocalDate startDate = LocalDate.of(startYear, 1, 1);
-        LocalDate endDate = LocalDate.of(endYear, 12, 31);
-        List<User> users = repository.findUsersByDateOfBirthBetween(startDate, endDate);
-        List<UserDTOWithCountry> appUserDTOs = new ArrayList<>();
-        for (User user : users) {
-            UserDTOWithCountry appUserDTO = Conversion.convertAppUserWithCountry(user);
-            appUserDTOs.add(appUserDTO);
-        }
-        return appUserDTOs;
-    }
-
     public void saveUserWithCountry(final User user, final String countryName) {
         if (!repository.existsByEmail(user.getEmail()) && countryRepository.existsByName(countryName)) {
             Country country = countryRepository.findCountryByName(countryName);
@@ -74,12 +62,16 @@ public class UserService {
         Optional<User> temp = repository.findById(user.getId());
         if (temp.isPresent()) {
             User userToUpdate = temp.get();
-            user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
+            if (user.getCountry() != null) {
+                user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
+            }
             if (!Objects.equals(userToUpdate.getEmail(), user.getEmail())
                     && repository.existsByEmail(user.getEmail())) {
                 throw new ObjectAlreadyExistsException("User with this email already registered.");
             }
             userCustomRepository.updateUser(userToUpdate);
+        } else {
+            throw new ObjectNotFoundException("Cannot update non-existent user");
         }
     }
 

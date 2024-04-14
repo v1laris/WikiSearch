@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import java.util.Set;
 import java.util.HashSet;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "article")
+@AllArgsConstructor
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

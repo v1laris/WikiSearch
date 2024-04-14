@@ -29,7 +29,7 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
-    @NonNull
+    //@NonNull
     @ManyToOne(fetch = FetchType.LAZY,
                 cascade = {
                     CascadeType.PERSIST,

@@ -25,7 +25,7 @@ public class ArticleCustomRepository {
                 + "LEFT JOIN topic t ON at.topic_id = t.id";
 
         Map<Long, Article> articleMap = new HashMap<>();
-        jdbcTemplate.query(sql, (rs) -> {
+        jdbcTemplate.query(sql, rs -> {
             Long articleId = rs.getLong("id");
             Article article = articleMap.get(articleId);
             if (article == null) {
