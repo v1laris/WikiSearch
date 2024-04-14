@@ -1,5 +1,6 @@
 package com.wks.wikisearch.service;
 
+import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.dto.ArticleDTOWithTopics;
 import com.wks.wikisearch.exception.ObjectAlreadyExistsException;
 import com.wks.wikisearch.exception.ObjectNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,17 +26,11 @@ public class ArticleService {
     private final TopicCustomRepository topicCustomRepository;
 
     public List<ArticleDTOWithTopics> findAllArticles() {
-        List<Article> articles =
-                articleCustomRepository.findAllArticlesWithTopics();
-        List<ArticleDTOWithTopics> articleDTOsWithTopics =
-                new ArrayList<>();
-        for (Article article : articles) {
-            ArticleDTOWithTopics articleDTOWithTopics =
-                    Conversion.convertArticleToDTOWithTopics(article);
-            articleDTOsWithTopics.add(articleDTOWithTopics);
-        }
-        return articleDTOsWithTopics;
+        return articleCustomRepository.findAllArticlesWithTopics().stream()
+                .map(Conversion::convertArticleToDTOWithTopics)
+                .collect(Collectors.toList());
     }
+
 
     public ArticleDTOWithTopics findByTitle(final String title) {
         if (articleRepository.existsByTitle(title)) {
@@ -46,11 +42,12 @@ public class ArticleService {
         }
     }
 
-    public void saveArticle(final Article article) {
+    public ArticleDTO saveArticle(final Article article) {
         if (articleRepository.existsByTitle(article.getTitle())) {
             throw new ObjectAlreadyExistsException("Article with this title already exists");
         }
         articleRepository.save(article);
+        return Conversion.convertArticleToDTO(article);
     }
 
     @Transactional
@@ -105,5 +102,11 @@ public class ArticleService {
                         .getId(),
                 topicCustomRepository
                         .findTopicByName(topicName).getId());
+    }
+
+    public List<ArticleDTO> addMultipleArticles(final List<Article> articleList) {
+        return articleList.stream()
+                .map(this::saveArticle)
+                .collect(Collectors.toList());
     }
 }

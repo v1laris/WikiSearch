@@ -1,5 +1,6 @@
 package com.wks.wikisearch.controller;
 
+import com.wks.wikisearch.dto.ArticleDTO;
 import com.wks.wikisearch.dto.ArticleDTOWithTopics;
 import com.wks.wikisearch.model.Article;
 import com.wks.wikisearch.service.ArticleService;
@@ -60,5 +61,10 @@ public class ArticleController {
             @RequestParam final String topicName) {
         service.detachTopicByArticleName(articleTitle, topicName);
         return new ResponseEntity<>("Successfully detached topic from the article", HttpStatus.OK);
+    }
+
+    @PostMapping("/addListArticles")
+    public ResponseEntity<List<ArticleDTO>> addMultipleCommand(@RequestBody List<Article> articlesList) {
+        return new ResponseEntity<>(service.addMultipleArticles(articlesList), HttpStatus.OK);
     }
 }

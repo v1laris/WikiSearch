@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")

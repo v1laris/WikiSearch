@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.wks.wikisearch.repository.CountryRepository;
 
@@ -29,14 +30,11 @@ public class UserService {
     private final CountryRepository countryRepository;
 
     public List<UserDTOWithCountry> findAllUsers() {
-        List<User> users = repository.findAll();
-        List<UserDTOWithCountry> appUserDTOs = new ArrayList<>();
-        for (User user : users) {
-            UserDTOWithCountry appUserDTO = Conversion.convertAppUserWithCountry(user);
-            appUserDTOs.add(appUserDTO);
-        }
-        return appUserDTOs;
+        return repository.findAll().stream()
+                .map(Conversion::convertAppUserWithCountry)
+                .collect(Collectors.toList());
     }
+
 
     public void saveUserWithCountry(final User user, final String countryName) {
         if (!repository.existsByEmail(user.getEmail()) && countryRepository.existsByName(countryName)) {
@@ -59,21 +57,24 @@ public class UserService {
     }
 
     public void updateUser(final User user) {
-        Optional<User> temp = repository.findById(user.getId());
-        if (temp.isPresent()) {
-            User userToUpdate = temp.get();
-            if (user.getCountry() != null) {
-                user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
-            }
-            if (!Objects.equals(userToUpdate.getEmail(), user.getEmail())
-                    && repository.existsByEmail(user.getEmail())) {
-                throw new ObjectAlreadyExistsException("User with this email already registered.");
-            }
-            userCustomRepository.updateUser(userToUpdate);
-        } else {
-            throw new ObjectNotFoundException("Cannot update non-existent user");
-        }
+        repository.findById(user.getId())
+                .ifPresentOrElse(
+                        userToUpdate -> {
+                            if (user.getCountry() != null) {
+                                user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
+                            }
+                            if (!Objects.equals(userToUpdate.getEmail(), user.getEmail())
+                                    && repository.existsByEmail(user.getEmail())) {
+                                throw new ObjectAlreadyExistsException("User with this email already registered.");
+                            }
+                            userCustomRepository.updateUser(userToUpdate);
+                        },
+                        () -> {
+                            throw new ObjectNotFoundException("Cannot update non-existent user");
+                        }
+                );
     }
+
 
     public void deleteUser(final String email) {
         if (!repository.existsByEmail(email)) {

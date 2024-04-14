@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,14 +25,11 @@ public class TopicService {
     private final ArticleCustomRepository articleCustomRepository;
 
     public List<TopicDTOWithArticles> findAllTopics() {
-        List<Topic> topics = topicCustomRepository.findAllTopicsWithArticles();
-        List<TopicDTOWithArticles> topicDTOs = new ArrayList<>();
-        for (Topic topic : topics) {
-            TopicDTOWithArticles topicDTO = Conversion.convertTopicToDTOWithArticles(topic);
-            topicDTOs.add(topicDTO);
-        }
-        return topicDTOs;
+        return topicCustomRepository.findAllTopicsWithArticles().stream()
+                .map(Conversion::convertTopicToDTOWithArticles)
+                .collect(Collectors.toList());
     }
+
 
     public TopicDTOWithArticles findByName(final String name) {
         if (topicRepository.existsByName(name)) {
@@ -54,7 +52,8 @@ public class TopicService {
 
     public void addNewArticleByTopicName(final String topicName, final String articleTitle) {
         if (articleRepository.existsByTitle(articleTitle) || topicRepository.existsByName(topicName)) {
-            topicCustomRepository.addArticleToTopic(topicCustomRepository.findTopicByName(topicName).getId(),
+            topicCustomRepository.addArticleToTopic(
+                    topicCustomRepository.findTopicByName(topicName).getId(),
                     articleCustomRepository.findArticleByTitle(articleTitle).getId());
         } else {
             throw new ObjectNotFoundException("This article or topic doesn't exist");
@@ -62,17 +61,15 @@ public class TopicService {
     }
 
     public void deleteTopic(final String name) {
-        if (topicRepository.existsByName(name)) {
-            Topic topic = topicCustomRepository.findTopicByName(name);
-            topicCustomRepository.deleteTopic(topic.getId());
-        } else {
-            throw new ObjectNotFoundException("Error deleting non-existent topic");
-
-        }
+        Topic topic = topicRepository.findByName(name)
+                .orElseThrow(() -> new ObjectNotFoundException("Error deleting non-existent topic"));
+        topicCustomRepository.deleteTopic(topic.getId());
     }
 
+
     public void detachArticleByTopicName(final String topicName, final String articleTitle) {
-        if (articleRepository.existsByTitle(articleTitle) && topicRepository.existsByName(topicName)) {
+        if (articleRepository.existsByTitle(articleTitle)
+                && topicRepository.existsByName(topicName)) {
             topicCustomRepository.detachArticleFromTopic(
                     topicCustomRepository
                             .findTopicByName(topicName)
@@ -84,13 +81,13 @@ public class TopicService {
     }
 
     public void updateTopic(final String topicOldName, final Topic topic) {
-        if (topicRepository.existsByName(topicOldName)) {
-            if(!Objects.equals(topic.getName(), topicOldName) && topicRepository.existsByName(topic.getName())) {
-                throw new ObjectAlreadyExistsException("New name already exists");
-            }
-            topicCustomRepository.updateTopic(topic);
-        } else {
+        if (!topicRepository.existsByName(topicOldName)) {
             throw new ObjectNotFoundException("Error updating non-existent topic");
         }
+        if(!Objects.equals(topic.getName(), topicOldName)
+                    && topicRepository.existsByName(topic.getName())) {
+                throw new ObjectAlreadyExistsException("New name already exists");
+        }
+        topicCustomRepository.updateTopic(topic);
     }
 }

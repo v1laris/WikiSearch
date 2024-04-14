@@ -22,12 +22,9 @@ public class CountryService {
 
     public List<CountryDTOWithUsers> findAllCountries() {
         List<Country> countries = repository.findAll();
-        List<CountryDTOWithUsers> countryDTOs = new ArrayList<>();
-        for (Country country : countries) {
-            CountryDTOWithUsers countryDTO = Conversion.convertCountryToDTOWithUsers(country);
-            countryDTOs.add(countryDTO);
-        }
-        return countryDTOs;
+        return countries.stream()
+                .map(Conversion::convertCountryToDTOWithUsers)
+                .toList();
     }
 
     public void saveCountry(final Country country) {
@@ -56,14 +53,13 @@ public class CountryService {
     }
 
     public void updateCountry(final Country country, final String countryOldName) {
-        if (repository.existsByName(countryOldName)) {
-            if (!repository.existsByName(country.getName())) {
-                customRepository.updateCountry(country);
-            } else {
-                throw new ObjectAlreadyExistsException("Error updating country: new name already exists");
-            }
-        } else {
+        if (!repository.existsByName(countryOldName)) {
             throw new ObjectNotFoundException("Error updating non-existent country");
         }
+        if (repository.existsByName(country.getName())) {
+            throw new ObjectAlreadyExistsException("Error updating country: new name already exists");
+        }
+        customRepository.updateCountry(country);
+
     }
 }

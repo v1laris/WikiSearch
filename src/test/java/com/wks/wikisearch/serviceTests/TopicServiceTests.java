@@ -149,10 +149,11 @@ class TopicServiceTests {
     @Test
     void testDeleteTopic_ExistingTopic() {
         String topicName = "ExistingTopic";
+        Topic topic = new Topic(1L, topicName);
 
         when(topicRepository.existsByName(topicName)).thenReturn(true);
-        when(topicCustomRepository.findTopicByName(topicName))
-                .thenReturn(new Topic(1L, topicName));
+        when(topicRepository.findByName(topicName))
+                .thenReturn(Optional.of(topic));
 
         assertDoesNotThrow(() -> {
             topicService.deleteTopic(topicName);
@@ -208,7 +209,8 @@ class TopicServiceTests {
         String topicOldName = "ExistingTopic";
         Topic topic = new Topic(1L, "UpdatedTopic");
 
-        when(topicRepository.findById(anyLong())).thenReturn(Optional.of(new Topic(1L, topicOldName)));
+        when(topicRepository.existsByName(topicOldName)).thenReturn(true);
+        when(topicRepository.existsByName("UpdatedTopic")).thenReturn(false);
 
         assertDoesNotThrow(() -> {
             topicService.updateTopic(topicOldName, topic);
