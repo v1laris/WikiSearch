@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,10 +21,9 @@ public class CountryService {
     private final CountryCustomRepository customRepository;
 
     public List<CountryDTOWithUsers> findAllCountries() {
-        List<Country> countries = repository.findAll();
-        return countries.stream()
+        return repository.findAll().stream()
                 .map(Conversion::convertCountryToDTOWithUsers)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public void saveCountry(final Country country) {
@@ -35,7 +35,8 @@ public class CountryService {
     }
 
     public CountryDTOWithUsers findByName(final String name) {
-        CountryDTOWithUsers result = Conversion.convertCountryToDTOWithUsers(repository.findCountryByName(name));
+        CountryDTOWithUsers result =
+                Conversion.convertCountryToDTOWithUsers(repository.findCountryByName(name));
         if (result != null) {
             return result;
         } else {

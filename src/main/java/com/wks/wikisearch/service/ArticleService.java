@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class ArticleService {
     public List<ArticleDTOWithTopics> findAllArticles() {
         return articleCustomRepository.findAllArticlesWithTopics().stream()
                 .map(Conversion::convertArticleToDTOWithTopics)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
@@ -106,6 +107,6 @@ public class ArticleService {
     public List<ArticleDTO> addMultipleArticles(final List<Article> articleList) {
         return articleList.stream()
                 .map(this::saveArticle)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

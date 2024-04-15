@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.wks.wikisearch.repository.CountryRepository;
 
@@ -28,7 +29,7 @@ public class UserService {
     public List<UserDTOWithCountry> findAllUsers() {
         return repository.findAll().stream()
                 .map(Conversion::convertAppUserWithCountry)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
@@ -57,7 +58,8 @@ public class UserService {
                 .ifPresentOrElse(
                         userToUpdate -> {
                             if (user.getCountry() != null) {
-                                user.setCountry(countryRepository.findCountryByName(user.getCountry().getName()));
+                                user.setCountry(countryRepository
+                                        .findCountryByName(user.getCountry().getName()));
                             }
                             if (!Objects.equals(userToUpdate.getEmail(), user.getEmail())
                                     && repository.existsByEmail(user.getEmail())) {
