@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class TopicService {
     public List<TopicDTOWithArticles> findAllTopics() {
         return topicCustomRepository.findAllTopicsWithArticles().stream()
                 .map(Conversion::convertTopicToDTOWithArticles)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

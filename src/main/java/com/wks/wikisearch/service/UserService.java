@@ -29,7 +29,7 @@ public class UserService {
     public List<UserDTOWithCountry> findAllUsers() {
         return repository.findAll().stream()
                 .map(Conversion::convertAppUserWithCountry)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

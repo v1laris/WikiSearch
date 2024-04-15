@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +22,7 @@ public class CountryService {
     public List<CountryDTOWithUsers> findAllCountries() {
         return repository.findAll().stream()
                 .map(Conversion::convertCountryToDTOWithUsers)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void saveCountry(final Country country) {
