@@ -50,9 +50,7 @@ class CountryServiceTests {
 
         List<CountryDTOWithUsers> result = countryService.findAllCountries();
 
-        assertEquals(countries.size(), result.size());
-        // Add more assertions based on your specific requirements
-    }
+        assertEquals(countries.size(), result.size());}
 
     @Test
     void testSaveCountry_NewCountry() {
