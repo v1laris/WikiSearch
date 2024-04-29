@@ -64,7 +64,8 @@ public class UserService {
                                     && repository.existsByEmail(user.getEmail())) {
                                 throw new ObjectAlreadyExistsException("User with this email already registered.");
                             }
-                            userCustomRepository.updateUser(userToUpdate);
+                            repository.save(user);
+                            //userCustomRepository.updateUser(userToUpdate);
                         },
                         () -> {
                             throw new ObjectNotFoundException("Cannot update non-existent user");

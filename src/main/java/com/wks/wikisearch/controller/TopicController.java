@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/topics")
 @AllArgsConstructor
+@CrossOrigin
 public class TopicController {
     private final TopicService service;
 
@@ -57,9 +60,12 @@ public class TopicController {
     }
 
     @PutMapping("update_topic/{topicOldName}")
-    public ResponseEntity<String> updateTopic(@PathVariable final String topicOldName,
-                                              @RequestBody final Topic topic) {
+    public ResponseEntity<Map<String, String>> updateTopic(@PathVariable final String topicOldName,
+                                                           @RequestBody final Topic topic) {
         service.updateTopic(topicOldName, topic);
-        return new ResponseEntity<>("Topic updated successfully", HttpStatus.CREATED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Topic updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

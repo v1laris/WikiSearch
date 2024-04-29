@@ -38,9 +38,6 @@ public class User {
     @JsonBackReference
     private Country country;
 
-    @Transient
-    private int age;
-
     public User() {
         // no args constructor
     }

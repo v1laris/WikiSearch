@@ -63,10 +63,10 @@ public class ArticleService {
             final Article article,
             final String articleOldTitle) {
         if (articleRepository.existsByTitle(articleOldTitle)) {
-            if (!articleRepository.existsByTitle(article.getTitle())) {
-                articleCustomRepository.updateArticle(article);
-            } else {
+            if (!Objects.equals(article.getTitle(), articleOldTitle) && articleRepository.existsByTitle(article.getTitle())) {
                 throw new ObjectAlreadyExistsException("Article with this title already exists");
+            } else {
+                articleCustomRepository.updateArticle(article);
             }
         } else {
             throw new ObjectNotFoundException("Updating non-existent article");

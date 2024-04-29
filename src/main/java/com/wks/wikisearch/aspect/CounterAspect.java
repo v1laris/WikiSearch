@@ -20,7 +20,7 @@ public class CounterAspect {
 
 
     @Before("execution(* com.wks.wikisearch.controller.*.*(..)) ")
-    public void incrementCounter() {
+    public synchronized void incrementCounter() {
         counterService.increment();
         LOGGER.info("Counter incremented to {} ", counterService.get());
     }

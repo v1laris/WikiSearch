@@ -5,13 +5,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 @AllArgsConstructor
 public class RequestsService {
     private static final String WIKIPEDIA_API_URL = "https://ru.wikipedia.org/w/api.php";
 
-    public String search(final String query) {
+    public List<Map<String, String>> search(final String query) {
         RestTemplate restTemplate = new RestTemplate();
 
         String url = WIKIPEDIA_API_URL
@@ -24,15 +29,22 @@ public class RequestsService {
         try {
             JsonNode root = mapper.readTree(response);
             JsonNode searchResults = root.path("query").path("search");
-            ArrayNode resultArray = mapper.createArrayNode();
+
+            List<Map<String, String>> resultList = new ArrayList<>();
             for (JsonNode result : searchResults) {
                 String title = result.path("title").asText();
                 String pageUrl = "https://ru.wikipedia.org/wiki/" + title.replace(" ", "_");
-                resultArray.add(mapper.createObjectNode().put("title", title).put("url", pageUrl));
+
+                Map<String, String> resultMap = new HashMap<>();
+                resultMap.put("title", title);
+                resultMap.put("url", pageUrl);
+
+                resultList.add(resultMap);
             }
-            return resultArray.toString();
+            return resultList;
         } catch (Exception e) {
-            return "Error occurred";
+            // Возвращаем пустой список в случае ошибки
+            return new ArrayList<>();
         }
     }
 }

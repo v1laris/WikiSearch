@@ -106,7 +106,6 @@ public class Conversion {
         appUserDTO.setLastName(appUser.getLastName());
         appUserDTO.setEmail(appUser.getEmail());
         appUserDTO.setDateOfBirth(appUser.getDateOfBirth());
-        appUserDTO.setAge(appUser.getAge());
         return appUserDTO;
     }
 
@@ -119,7 +118,6 @@ public class Conversion {
         appUserDTOWithCountry.setCountry(convertCountryToDTO(appUser.getCountry()));
         appUserDTOWithCountry.setDateOfBirth(appUser.getDateOfBirth());
         appUserDTOWithCountry.setEmail(appUser.getEmail());
-        appUserDTOWithCountry.setAge(appUser.getAge());
 
         return appUserDTOWithCountry;
     }

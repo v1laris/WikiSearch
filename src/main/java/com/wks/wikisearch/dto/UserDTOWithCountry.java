@@ -13,5 +13,4 @@ public class UserDTOWithCountry {
     private LocalDate dateOfBirth;
     private String email;
     private CountryDTO country;
-    private int age;
 }

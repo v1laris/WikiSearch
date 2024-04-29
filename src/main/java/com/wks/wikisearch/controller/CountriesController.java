@@ -2,17 +2,22 @@ package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.dto.CountryDTOWithUsers;
 import com.wks.wikisearch.model.Country;
+import com.wks.wikisearch.model.User;
 import com.wks.wikisearch.service.CountryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/countries")
 @AllArgsConstructor
+@CrossOrigin
 public class CountriesController {
     private final CountryService service;
 
@@ -39,11 +44,12 @@ public class CountriesController {
     }
 
     @PutMapping("update_country/{countryOldName}")
-    public ResponseEntity<String> updateCountry(
+    public ResponseEntity<Map<String, String>> updateCountry(
             @PathVariable final String countryOldName,
             @RequestBody final Country country) {
         service.updateCountry(country, countryOldName);
-        return new ResponseEntity<>("Country updated successfully", HttpStatus.OK);
-
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Country updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

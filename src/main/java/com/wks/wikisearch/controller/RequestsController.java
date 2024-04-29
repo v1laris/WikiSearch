@@ -2,19 +2,20 @@ package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.service.RequestsService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/search")
 @AllArgsConstructor
+@CrossOrigin
 public class RequestsController {
     private final RequestsService service;
 
     @GetMapping("/{keyword}")
-    public String search(@PathVariable final String keyword) {
+    public List<Map<String, String>> search(@PathVariable final String keyword) {
         return service.search(keyword);
     }
 }

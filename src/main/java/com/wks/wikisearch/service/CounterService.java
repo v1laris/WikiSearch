@@ -10,7 +10,6 @@ public class CounterService {
     public synchronized void increment() {
         counter.incrementAndGet();
     }
-
     public synchronized int get() {
         return counter.get();
     }

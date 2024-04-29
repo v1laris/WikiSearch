@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/articles")
 @AllArgsConstructor
@@ -34,11 +37,13 @@ public class ArticleController {
     }
 
     @PutMapping("update_article/{articleOldTitle}")
-    public ResponseEntity<String> updateArticle(
+    public ResponseEntity<Map<String, String>> updateArticle(
             @PathVariable final String articleOldTitle,
             @RequestBody final Article article) {
         service.updateArticle(article, articleOldTitle);
-        return new ResponseEntity<>("Article updated successfully", HttpStatus.OK);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Article updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("delete_article/{title}")

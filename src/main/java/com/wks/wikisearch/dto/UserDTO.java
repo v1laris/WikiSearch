@@ -12,5 +12,4 @@ public class UserDTO {
     private String lastName;
     private LocalDate dateOfBirth;
     private String email;
-    private int age;
 }
