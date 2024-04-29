@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/countries")
 @AllArgsConstructor
-@CrossOrigin(value = "localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CountriesController {
     private final CountryService service;
 
