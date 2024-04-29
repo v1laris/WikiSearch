@@ -2,9 +2,7 @@ package com.wks.wikisearch.controller;
 
 import com.wks.wikisearch.dto.CountryDTOWithUsers;
 import com.wks.wikisearch.model.Country;
-import com.wks.wikisearch.model.User;
 import com.wks.wikisearch.service.CountryService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
