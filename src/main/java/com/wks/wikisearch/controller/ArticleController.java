@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(value = "localhost:3000")
 @RestController
 @RequestMapping("/api/articles")
 @AllArgsConstructor

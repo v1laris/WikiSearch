@@ -17,7 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/topics")
 @AllArgsConstructor
-@CrossOrigin
+@CrossOrigin(value = "localhost:3000")
 public class TopicController {
     private final TopicService service;
 
